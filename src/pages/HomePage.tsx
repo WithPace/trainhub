@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle, Users, BookOpen, Award } from 'lucide-react'
-import { categories, getFeaturedTrainers, getFeaturedCourses } from '@/data/mock'
+import { getCategories, getTrainers, getCourses } from '@/services/api'
+import { useQuery } from '@/hooks/useQuery'
 import TrainerCard from '@/components/ui/TrainerCard'
 import CourseCard from '@/components/ui/CourseCard'
 import SearchBar from '@/components/ui/SearchBar'
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const featuredTrainers = getFeaturedTrainers()
-  const featuredCourses = getFeaturedCourses()
+  const { data: categories } = useQuery(() => getCategories(), [])
+  const { data: featuredTrainers } = useQuery(() => getTrainers({ featured: true }), [])
+  const { data: featuredCourses } = useQuery(() => getCourses({ featured: true }), [])
 
   return (
     <div>
@@ -69,7 +71,7 @@ export default function HomePage() {
             <p className="mt-2 text-gray-500">覆盖企业培训核心领域</p>
           </div>
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {categories.map(cat => (
+            {(categories ?? []).map(cat => (
               <Link
                 key={cat.id}
                 to={`/courses?category=${cat.slug}`}
@@ -102,7 +104,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredTrainers.map(trainer => (
+            {(featuredTrainers ?? []).map(trainer => (
               <TrainerCard key={trainer.id} trainer={trainer} />
             ))}
           </div>
@@ -125,7 +127,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredCourses.map(course => (
+            {(featuredCourses ?? []).map(course => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>

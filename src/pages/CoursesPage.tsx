@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { courses, categories } from '@/data/mock'
+import { getCourses, getCategories } from '@/services/api'
+import { useQuery } from '@/hooks/useQuery'
 import CourseCard from '@/components/ui/CourseCard'
 import SearchBar from '@/components/ui/SearchBar'
 
@@ -12,6 +13,9 @@ export default function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
 
+  const { data: allCourses, loading } = useQuery(() => getCourses(), [])
+  const { data: categories } = useQuery(() => getCategories(), [])
+
   // 更新 URL 搜索参数
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug)
@@ -21,23 +25,22 @@ export default function CoursesPage() {
     setSearchParams(params)
   }
 
-  // 搜索与筛选
+  // 客户端筛选
   const filteredCourses = useMemo(() => {
-    return courses.filter(course => {
-      // 关键词搜索
+    if (!allCourses) return []
+    return allCourses.filter(course => {
       const matchesSearch =
         !searchQuery ||
         course.title.includes(searchQuery) ||
         course.description.includes(searchQuery) ||
         (course.trainer_name && course.trainer_name.includes(searchQuery))
 
-      // 分类筛选
       const matchesCategory =
         !selectedCategory || course.category_slug === selectedCategory
 
       return matchesSearch && matchesCategory
     })
-  }, [searchQuery, selectedCategory])
+  }, [allCourses, searchQuery, selectedCategory])
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -72,7 +75,7 @@ export default function CoursesPage() {
           >
             全部
           </button>
-          {categories.map(cat => (
+          {(categories ?? []).map(cat => (
             <button
               key={cat.slug}
               type="button"
@@ -90,7 +93,7 @@ export default function CoursesPage() {
 
         {/* 结果计数 */}
         <p className="mt-6 text-sm text-gray-500">
-          共 {filteredCourses.length} 门课程
+          {loading ? '加载中...' : `共 ${filteredCourses.length} 门课程`}
         </p>
 
         {/* 课程列表 */}
@@ -100,12 +103,12 @@ export default function CoursesPage() {
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
-        ) : (
+        ) : !loading ? (
           <div className="mt-12 text-center">
             <p className="text-lg text-gray-500">没有找到匹配的课程</p>
             <p className="mt-2 text-sm text-gray-400">请尝试调整搜索条件或分类筛选</p>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )

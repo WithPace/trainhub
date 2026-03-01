@@ -1,15 +1,28 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Star, MapPin, Briefcase, Mail, ArrowLeft } from 'lucide-react'
-import { getTrainerById, getCoursesByTrainerId } from '@/data/mock'
+import { getTrainerById as fetchTrainer } from '@/services/api'
+import { useQuery } from '@/hooks/useQuery'
 import CourseCard from '@/components/ui/CourseCard'
 import InquiryModal from '@/components/ui/InquiryModal'
 
 export default function TrainerDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [inquiryOpen, setInquiryOpen] = useState(false)
+  const trainerId = Number(id)
 
-  const trainer = getTrainerById(Number(id))
+  const { data: trainer, loading } = useQuery(
+    () => fetchTrainer(trainerId),
+    [trainerId]
+  )
+
+  if (loading) {
+    return (
+      <div className="px-4 py-20 text-center">
+        <p className="text-gray-500">加载中...</p>
+      </div>
+    )
+  }
 
   if (!trainer) {
     return (
@@ -22,7 +35,7 @@ export default function TrainerDetailPage() {
     )
   }
 
-  const trainerCourses = getCoursesByTrainerId(trainer.id)
+  const trainerCourses = trainer.courses ?? []
   const initial = trainer.name.charAt(0)
 
   return (

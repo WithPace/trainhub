@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import type { Inquiry } from '@/types'
+import { submitInquiry } from '@/services/api'
 
 interface InquiryModalProps {
   isOpen: boolean
@@ -20,14 +21,23 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   if (!isOpen) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock 提交：实际场景会发 API 请求
-    console.log('咨询表单提交:', form)
-    setSubmitted(true)
+    setSubmitting(true)
+    setError('')
+    try {
+      await submitInquiry(form)
+      setSubmitted(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '提交失败，请稍后重试')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleChange = (field: keyof Inquiry, value: string) => {
@@ -127,11 +137,16 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
               />
             </div>
 
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              disabled={submitting}
+              className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
             >
-              提交咨询
+              {submitting ? '提交中...' : '提交咨询'}
             </button>
           </form>
         )}

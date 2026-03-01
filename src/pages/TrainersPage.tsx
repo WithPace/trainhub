@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
-import { trainers, getAllCities, getAllSpecialties } from '@/data/mock'
+import { getTrainers, getAllCities, getAllSpecialties } from '@/services/api'
+import { useQuery } from '@/hooks/useQuery'
 import TrainerCard from '@/components/ui/TrainerCard'
 import SearchBar from '@/components/ui/SearchBar'
 
@@ -8,13 +9,14 @@ export default function TrainersPage() {
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
 
+  const { data: allTrainers, loading } = useQuery(() => getTrainers(), [])
   const cities = getAllCities()
   const specialties = getAllSpecialties()
 
-  // 搜索与筛选
+  // 客户端筛选（数据量小，无需服务端筛选）
   const filteredTrainers = useMemo(() => {
-    return trainers.filter(trainer => {
-      // 关键词搜索
+    if (!allTrainers) return []
+    return allTrainers.filter(trainer => {
       const matchesSearch =
         !searchQuery ||
         trainer.name.includes(searchQuery) ||
@@ -22,16 +24,14 @@ export default function TrainersPage() {
         trainer.bio.includes(searchQuery) ||
         trainer.specialties.some(s => s.includes(searchQuery))
 
-      // 城市筛选
       const matchesCity = !selectedCity || trainer.city === selectedCity
 
-      // 专长筛选
       const matchesSpecialty =
         !selectedSpecialty || trainer.specialties.includes(selectedSpecialty)
 
       return matchesSearch && matchesCity && matchesSpecialty
     })
-  }, [searchQuery, selectedCity, selectedSpecialty])
+  }, [allTrainers, searchQuery, selectedCity, selectedSpecialty])
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -76,7 +76,7 @@ export default function TrainersPage() {
 
         {/* 结果计数 */}
         <p className="mt-6 text-sm text-gray-500">
-          共 {filteredTrainers.length} 位培训师
+          {loading ? '加载中...' : `共 ${filteredTrainers.length} 位培训师`}
         </p>
 
         {/* 培训师列表 */}
@@ -86,12 +86,12 @@ export default function TrainersPage() {
               <TrainerCard key={trainer.id} trainer={trainer} />
             ))}
           </div>
-        ) : (
+        ) : !loading ? (
           <div className="mt-12 text-center">
             <p className="text-lg text-gray-500">没有找到匹配的培训师</p>
             <p className="mt-2 text-sm text-gray-400">请尝试调整搜索条件</p>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Clock, Users, DollarSign, ArrowLeft, CheckCircle } from 'lucide-react'
-import { getCourseById, getTrainerById } from '@/data/mock'
+import { getCourseById as fetchCourse, getTrainerById as fetchTrainer } from '@/services/api'
+import { useQuery } from '@/hooks/useQuery'
 import CategoryBadge from '@/components/ui/CategoryBadge'
 import InquiryModal from '@/components/ui/InquiryModal'
 
@@ -18,9 +19,25 @@ function formatPriceRange(range: string): string {
 export default function CourseDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [inquiryOpen, setInquiryOpen] = useState(false)
+  const courseId = Number(id)
 
-  const course = getCourseById(Number(id))
-  const trainer = course ? getTrainerById(course.trainer_id) : undefined
+  const { data: course, loading: courseLoading } = useQuery(
+    () => fetchCourse(courseId),
+    [courseId]
+  )
+
+  const { data: trainer } = useQuery(
+    () => (course ? fetchTrainer(course.trainer_id) : Promise.resolve(null)),
+    [course?.trainer_id]
+  )
+
+  if (courseLoading) {
+    return (
+      <div className="px-4 py-20 text-center">
+        <p className="text-gray-500">加载中...</p>
+      </div>
+    )
+  }
 
   if (!course) {
     return (
@@ -64,7 +81,6 @@ export default function CourseDetailPage() {
               <h2 className="text-xl font-bold text-gray-900">课程大纲</h2>
               <div className="mt-4 space-y-3">
                 {course.outline.map((item, index) => {
-                  // 判断是否是分组标题（以 "Day" 开头）
                   const isGroupTitle = item.startsWith('Day')
                   return isGroupTitle ? (
                     <h3
