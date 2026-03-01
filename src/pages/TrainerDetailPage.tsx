@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Star, MapPin, Briefcase, Mail, ArrowLeft } from 'lucide-react'
 import { getTrainerById as fetchTrainer } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
+import { getAvatarUrl } from '@/lib/utils'
 import CourseCard from '@/components/ui/CourseCard'
 import InquiryModal from '@/components/ui/InquiryModal'
 
@@ -36,7 +37,7 @@ export default function TrainerDetailPage() {
   }
 
   const trainerCourses = trainer.courses ?? []
-  const initial = trainer.name.charAt(0)
+  const avatarSrc = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -54,9 +55,11 @@ export default function TrainerDetailPage() {
         <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-8">
           <div className="flex flex-col gap-6 sm:flex-row">
             {/* 头像 */}
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-blue-100 text-3xl font-bold text-blue-600">
-              {initial}
-            </div>
+            <img
+              src={avatarSrc}
+              alt={trainer.name}
+              className="h-24 w-24 shrink-0 rounded-full object-cover"
+            />
 
             {/* 基本信息 */}
             <div className="flex-1">

@@ -45,14 +45,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 数据亮点 */}
+      {/* 价值亮点 */}
       <section className="border-b border-gray-200 bg-white px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 md:grid-cols-4">
           {[
-            { icon: Users, label: '认证培训师', value: '200+' },
-            { icon: BookOpen, label: '精品课程', value: '500+' },
-            { icon: Award, label: '服务企业', value: '1000+' },
-            { icon: CheckCircle, label: '满意度', value: '98%' },
+            { icon: Users, label: '严选培训师', value: '精挑细选' },
+            { icon: BookOpen, label: '涵盖领域', value: '6大方向' },
+            { icon: Award, label: '对接模式', value: '去中间商' },
+            { icon: CheckCircle, label: '咨询服务', value: '免费' },
           ].map(stat => (
             <div key={stat.label} className="text-center">
               <stat.icon className="mx-auto h-8 w-8 text-blue-600" />

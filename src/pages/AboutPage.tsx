@@ -78,20 +78,19 @@ export default function AboutPage() {
           <p className="mt-4 text-gray-500">
             如有任何问题或合作意向，欢迎随时联系我们
           </p>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-gray-200 p-6">
-              <p className="text-sm text-gray-500">服务热线</p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">400-888-9999</p>
+              <p className="text-sm text-gray-500">商务合作</p>
+              <p className="mt-1 text-lg font-semibold text-gray-900">hi@trainhub.cn</p>
             </div>
             <div className="rounded-xl border border-gray-200 p-6">
-              <p className="text-sm text-gray-500">电子邮箱</p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">contact@trainhub.cn</p>
-            </div>
-            <div className="rounded-xl border border-gray-200 p-6">
-              <p className="text-sm text-gray-500">公司地址</p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">上海市浦东新区</p>
+              <p className="text-sm text-gray-500">培训师入驻</p>
+              <p className="mt-1 text-lg font-semibold text-gray-900">join@trainhub.cn</p>
             </div>
           </div>
+          <p className="mt-6 text-sm text-gray-400">
+            我们会在1个工作日内回复您的消息
+          </p>
         </div>
       </section>
     </div>

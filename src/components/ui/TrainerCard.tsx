@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Star, MapPin, Briefcase } from 'lucide-react'
 import type { Trainer } from '@/types'
+import { getAvatarUrl } from '@/lib/utils'
 
 interface TrainerCardProps {
   trainer: Trainer
 }
 
 export default function TrainerCard({ trainer }: TrainerCardProps) {
-  // 生成头像占位（取姓氏首字）
-  const initial = trainer.name.charAt(0)
+  const avatarSrc = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
 
   return (
     <Link
@@ -18,9 +18,11 @@ export default function TrainerCard({ trainer }: TrainerCardProps) {
       <div className="p-6">
         {/* 头部：头像 + 基本信息 */}
         <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-600">
-            {initial}
-          </div>
+          <img
+            src={avatarSrc}
+            alt={trainer.name}
+            className="h-14 w-14 shrink-0 rounded-full object-cover"
+          />
           <div className="min-w-0 flex-1">
             <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
               {trainer.name}
