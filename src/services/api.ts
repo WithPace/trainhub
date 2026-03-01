@@ -121,20 +121,43 @@ export async function getCourseById(id: number): Promise<Course | null> {
 
 // ─── Inquiries ───
 
+/** 外部表单服务端点（Formspree / Getform / Web3Forms 等） */
+const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || ''
+
 export async function submitInquiry(
   inquiry: Inquiry
 ): Promise<{ id: number; message: string }> {
-  if (!useApi) {
-    // Mock: 模拟提交成功
-    console.log('[mock] Inquiry submitted:', inquiry)
+  // 优先使用后端 API
+  if (useApi) {
+    const data = await apiFetch<{ id: number }>('/api/inquiries', {
+      method: 'POST',
+      body: JSON.stringify(inquiry),
+    })
+    return { ...data, message: '咨询已提交，我们会尽快联系您' }
+  }
+
+  // 其次使用外部表单服务（适用于 GitHub Pages 等静态部署）
+  if (FORM_ENDPOINT) {
+    const res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        company_name: inquiry.company_name,
+        contact_name: inquiry.contact_name,
+        contact_phone: inquiry.contact_phone,
+        message: inquiry.message || '',
+        course_id: inquiry.course_id,
+        trainer_id: inquiry.trainer_id,
+        _subject: `TrainHub 新咨询 - ${inquiry.company_name}`,
+      }),
+    })
+    if (!res.ok) throw new Error('表单提交失败，请稍后重试')
     return { id: Date.now(), message: '咨询已提交，我们会尽快联系您' }
   }
 
-  const data = await apiFetch<{ id: number }>('/api/inquiries', {
-    method: 'POST',
-    body: JSON.stringify(inquiry),
-  })
-  return { ...data, message: '咨询已提交，我们会尽快联系您' }
+  // 兜底：mock 模式
+  console.log('[mock] Inquiry submitted:', inquiry)
+  return { id: Date.now(), message: '咨询已提交（演示模式）' }
 }
 
 // ─── Utils ───

@@ -12,7 +12,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy:api": "wrangler deploy"
+    "deploy:api": "wrangler deploy",
+    "deploy:pages": "bash scripts/deploy-pages.sh"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
