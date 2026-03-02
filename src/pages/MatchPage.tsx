@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import PageHead from '@/components/seo/PageHead'
 import {
   Target,
   Users,
@@ -334,6 +335,11 @@ export default function MatchPage() {
 
   return (
     <div>
+      <PageHead
+        title="智能培训匹配 | TrainHub - AI 推荐最合适的培训方案"
+        description="回答5个简单问题，AI 智能推荐最适合您企业的培训师和课程方案。"
+        path="/match"
+      />
       <JsonLd data={buildMatchPageSchema()} />
 
       {/* Hero */}

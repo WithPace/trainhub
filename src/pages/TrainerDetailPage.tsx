@@ -10,6 +10,7 @@ import InquiryModal from '@/components/ui/InquiryModal'
 import ReviewSection from '@/components/ui/ReviewSection'
 import ShareButtons from '@/components/ui/ShareButtons'
 import { getReviewsByTrainerId } from '@/data/reviews'
+import PageHead from '@/components/seo/PageHead'
 import {
   JsonLd,
   BreadcrumbNav,
@@ -62,6 +63,11 @@ export default function TrainerDetailPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <PageHead
+        title={`${trainer.name} - ${trainer.title} | TrainHub`}
+        description={`${trainer.name}，${trainer.title}，${trainer.city}，${trainer.years_experience}年培训经验。擅长${trainer.specialties.join('、')}。`}
+        path={`/trainers/${trainer.id}`}
+      />
       {/* 结构化数据 */}
       <JsonLd data={buildPersonSchema(trainer, trainerReviews)} />
       <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />

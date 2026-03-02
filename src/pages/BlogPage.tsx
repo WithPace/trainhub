@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { blogPostsMeta } from '@/data/blog-meta'
+import PageHead from '@/components/seo/PageHead'
 
 const POSTS_PER_PAGE = 12
 
@@ -62,10 +63,8 @@ export default function BlogPage() {
     return pages
   }, [currentPage, totalPages])
 
-  // 设置页面标题和 JSON-LD
+  // 设置 JSON-LD
   useEffect(() => {
-    document.title = '行业洞察 - TrainHub | 企业培训行业趋势与最佳实践'
-
     // 插入 JSON-LD
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -100,6 +99,11 @@ export default function BlogPage() {
 
   return (
     <div>
+      <PageHead
+        title="行业洞察 - TrainHub | 企业培训行业趋势与最佳实践"
+        description="企业培训行业的最新趋势、最佳实践和深度分析，帮助 HR 和培训负责人做出更好的决策。"
+        path="/blog"
+      />
       {/* 页面头部 */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 px-4 py-16 text-white sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">

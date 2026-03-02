@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ChevronDown, ChevronRight, AlertTriangle, Target, TrendingUp, ArrowRight, HelpCircle } from 'lucide-react'
 import { getTopicBySlug } from '@/data/topics'
 import { categories, courses, trainers } from '@/data/mock'
 import CourseCard from '@/components/ui/CourseCard'
 import TrainerCard from '@/components/ui/TrainerCard'
+import PageHead from '@/components/seo/PageHead'
 import type { TopicData } from '@/data/topics'
 
 // 每个分类对应的浅色背景
@@ -125,26 +126,6 @@ export default function TopicPage() {
 
   const baseUrl = 'https://withpace.github.io/trainhub/'
 
-  // 设置 document.title 和 meta description
-  useEffect(() => {
-    if (topic) {
-      document.title = topic.title
-
-      // 更新 meta description
-      let metaDesc = document.querySelector('meta[name="description"]')
-      if (!metaDesc) {
-        metaDesc = document.createElement('meta')
-        metaDesc.setAttribute('name', 'description')
-        document.head.appendChild(metaDesc)
-      }
-      metaDesc.setAttribute('content', topic.metaDescription)
-    }
-
-    return () => {
-      document.title = 'TrainHub - 企业培训师平台'
-    }
-  }, [topic])
-
   // 404 处理
   if (!topic || !category) {
     return (
@@ -162,6 +143,11 @@ export default function TopicPage() {
 
   return (
     <div>
+      <PageHead
+        title={topic.title}
+        description={topic.metaDescription}
+        path={`/topics/${topic.slug}`}
+      />
       {/* JSON-LD 结构化数据 */}
       {jsonLdData.map((data, i) => (
         <script

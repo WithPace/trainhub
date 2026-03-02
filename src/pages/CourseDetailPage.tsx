@@ -9,6 +9,7 @@ import InquiryModal from '@/components/ui/InquiryModal'
 import ReviewSection from '@/components/ui/ReviewSection'
 import ShareButtons from '@/components/ui/ShareButtons'
 import { getReviewsByCourseId } from '@/data/reviews'
+import PageHead from '@/components/seo/PageHead'
 import {
   JsonLd,
   BreadcrumbNav,
@@ -74,6 +75,11 @@ export default function CourseDetailPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <PageHead
+        title={`${course.title} | TrainHub 培训课程`}
+        description={course.description}
+        path={`/courses/${course.id}`}
+      />
       {/* 结构化数据 */}
       <JsonLd data={buildCourseSchema(course, trainer)} />
       <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />

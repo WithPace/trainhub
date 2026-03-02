@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CheckCircle, Star, TrendingUp, Users } from 'lucide-react'
 import { trainers } from '@/data/mock'
 import { getAvatarUrl } from '@/lib/utils'
+import PageHead from '@/components/seo/PageHead'
 
 interface TrainerApplication {
   name: string
@@ -127,6 +128,11 @@ export default function JoinPage() {
 
   return (
     <div>
+      <PageHead
+        title="培训师入驻 | TrainHub - 零佣金展示专业能力"
+        description="成为 TrainHub 认证培训师，直接对接优质企业客户。零佣金入驻，专业个人主页展示。"
+        path="/join"
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-emerald-600 to-emerald-800 px-4 py-16 text-white sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">

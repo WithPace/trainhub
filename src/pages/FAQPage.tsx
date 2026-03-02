@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { JsonLd } from '@/components/seo/JsonLd'
+import PageHead from '@/components/seo/PageHead'
 
 interface FAQItem {
   question: string
@@ -106,6 +107,11 @@ export default function FAQPage() {
 
   return (
     <div>
+      <PageHead
+        title="常见问题 | TrainHub - 企业培训平台"
+        description="关于 TrainHub 平台、培训服务、培训师入驻和合作方式的常见疑问解答。"
+        path="/faq"
+      />
       <JsonLd data={buildFAQSchema()} />
 
       {/* Hero */}

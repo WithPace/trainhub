@@ -4,6 +4,7 @@ import { getCourses, getCategories } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import CourseCard from '@/components/ui/CourseCard'
 import SearchBar from '@/components/ui/SearchBar'
+import PageHead from '@/components/seo/PageHead'
 
 /** 从 "30000-50000" 格式的 price_range 中提取最低价 */
 function getMinPrice(priceRange: string): number {
@@ -81,6 +82,11 @@ export default function CoursesPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <PageHead
+        title="培训课程 | TrainHub - 各领域精品企业培训课程"
+        description="浏览各领域精品课程，按分类、价格、时长筛选，找到最适合您团队的培训方案。"
+        path="/courses"
+      />
       <div className="mx-auto max-w-7xl">
         {/* 标题 */}
         <div>

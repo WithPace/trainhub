@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom'
 import { Target, Shield, Handshake, Lightbulb } from 'lucide-react'
+import PageHead from '@/components/seo/PageHead'
 
 export default function AboutPage() {
   return (
     <div>
+      <PageHead
+        title="关于我们 | TrainHub - 连接企业与优质培训师"
+        description="TrainHub 是专注于企业培训领域的专业服务平台，连接企业与顶尖培训师，让企业培训更简单、更高效。"
+        path="/about"
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 px-4 py-20 text-white sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">

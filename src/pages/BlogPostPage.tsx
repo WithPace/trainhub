@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react'
 import { getBlogPostMetaBySlug, getRelatedPostsMeta } from '@/data/blog-meta'
+import PageHead from '@/components/seo/PageHead'
 import type { ContentBlock } from '@/data/blog-meta'
 
 /** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
@@ -129,11 +130,9 @@ export default function BlogPostPage() {
     )
   }, [slug])
 
-  // 设置页面标题和 JSON-LD
+  // 设置 JSON-LD
   useEffect(() => {
     if (!meta) return
-
-    document.title = `${meta.title} - TrainHub 行业洞察`
 
     // JSON-LD: Article schema
     const jsonLd = {
@@ -189,6 +188,13 @@ export default function BlogPostPage() {
 
   return (
     <div>
+      <PageHead
+        title={`${meta.title} - TrainHub 行业洞察`}
+        description={meta.excerpt}
+        path={`/blog/${meta.id}`}
+        type="article"
+        publishDate={meta.publishDate}
+      />
       {/* 面包屑导航 */}
       <div className="border-b border-gray-200 bg-gray-50 px-4 sm:px-6 lg:px-8">
         <nav className="mx-auto flex max-w-4xl items-center gap-2 py-3 text-sm text-gray-500">

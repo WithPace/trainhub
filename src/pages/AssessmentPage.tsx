@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { JsonLd } from '@/components/seo/JsonLd'
+import PageHead from '@/components/seo/PageHead'
 
 // ──────────────────── 类型定义 ────────────────────
 
@@ -275,11 +276,6 @@ export default function AssessmentPage() {
   // 是否显示结果
   const [showResult, setShowResult] = useState(false)
 
-  // 设置页面标题
-  useEffect(() => {
-    document.title = '企业培训需求诊断 -- TrainHub | 3分钟快速评估培训方向'
-  }, [])
-
   // 是否所有问题都已作答
   const allAnswered = allQuestionIds.every(id => scores[id] !== undefined)
 
@@ -313,6 +309,11 @@ export default function AssessmentPage() {
 
   return (
     <div>
+      <PageHead
+        title="企业培训需求诊断 | TrainHub - 3分钟快速评估培训方向"
+        description="3分钟快速评估企业培训现状，获取专业诊断报告和改进建议，涵盖领导力、专业技能、团队协作、数字化能力四大维度。"
+        path="/assessment"
+      />
       <JsonLd data={buildAssessmentSchema()} />
 
       {/* Hero 区域 */}

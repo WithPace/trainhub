@@ -3,6 +3,7 @@ import { getTrainers, getAllCities, getAllSpecialties } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import TrainerCard from '@/components/ui/TrainerCard'
 import SearchBar from '@/components/ui/SearchBar'
+import PageHead from '@/components/seo/PageHead'
 
 const experienceRanges = [
   { label: '全部经验', min: 0, max: Infinity },
@@ -51,6 +52,11 @@ export default function TrainersPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <PageHead
+        title="培训师 | TrainHub - 严选企业培训专家"
+        description="浏览 TrainHub 严格筛选的专业培训师，按城市、专长、经验筛选，找到最适合您企业的培训专家。"
+        path="/trainers"
+      />
       <div className="mx-auto max-w-7xl">
         {/* 标题 */}
         <div>
