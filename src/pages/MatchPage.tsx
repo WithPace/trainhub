@@ -397,7 +397,7 @@ export default function MatchPage() {
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="flex min-h-[44px] items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   上一步
@@ -409,7 +409,7 @@ export default function MatchPage() {
                 <button
                   type="button"
                   onClick={() => setStep(step + 1)}
-                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  className="flex min-h-[44px] items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
                 >
                   下一步
                   <ArrowRight className="h-4 w-4" />

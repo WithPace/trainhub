@@ -18,8 +18,8 @@ export default function TrainersPage() {
   const [selectedExpRange, setSelectedExpRange] = useState(0) // index into experienceRanges
 
   const { data: allTrainers, loading } = useQuery(() => getTrainers(), [])
-  const cities = getAllCities()
-  const specialties = getAllSpecialties()
+  const { data: cities } = useQuery(() => getAllCities(), [])
+  const { data: specialties } = useQuery(() => getAllSpecialties(), [])
 
   // 客户端筛选（数据量小，无需服务端筛选）
   const filteredTrainers = useMemo(() => {
@@ -74,7 +74,7 @@ export default function TrainersPage() {
             className={selectClass}
           >
             <option value="">全部城市</option>
-            {cities.map(city => (
+            {(cities ?? []).map(city => (
               <option key={city} value={city}>{city}</option>
             ))}
           </select>
@@ -84,7 +84,7 @@ export default function TrainersPage() {
             className={selectClass}
           >
             <option value="">全部专长</option>
-            {specialties.map(s => (
+            {(specialties ?? []).map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>

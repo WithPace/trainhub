@@ -39,7 +39,7 @@ const routes = [
   '/topics/hr',
   '/topics/finance',
   '/topics/communication',
-  // 博客文章 (20)
+  // 博客文章 (29)
   '/blog/enterprise-training-industry-disruption',
   '/blog/how-to-choose-ai-training-course',
   '/blog/leadership-training-trends-2026',
@@ -60,6 +60,18 @@ const routes = [
   '/blog/team-building-training-program',
   '/blog/sales-team-training-program',
   '/blog/how-to-choose-training-platform',
+  '/blog/manufacturing-training-program-design',
+  '/blog/corporate-learning-map-guide',
+  '/blog/why-training-fails-solutions',
+  '/blog/finance-industry-training-program',
+  '/blog/healthcare-training-compliance-guide',
+  '/blog/annual-training-summary-report-template',
+  '/blog/retail-industry-training-program',
+  '/blog/training-needs-survey-template',
+  '/blog/it-industry-tech-training-program',
+  '/blog/education-industry-training-program',
+  '/blog/trainer-evaluation-form-template',
+  '/blog/logistics-industry-training-program',
 ]
 
 /** 简易静态文件服务器 */

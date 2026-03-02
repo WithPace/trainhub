@@ -1,11 +1,18 @@
 import type { Category, Trainer, Course, Inquiry } from '@/types'
-import * as mock from '@/data/mock'
 
 // API 基地址 — 生产环境从环境变量读取，开发环境通过 Vite proxy 代理
 const API_BASE = import.meta.env.VITE_API_BASE || ''
 
 /** 是否启用后端 API（VITE_USE_API=true 或 VITE_API_BASE 非空） */
 const useApi = import.meta.env.VITE_USE_API === 'true' || Boolean(API_BASE)
+
+// 动态加载 mock 数据 — 避免将培训师/课程数据打包进主 chunk
+// 缓存后续调用直接返回，不重复加载
+let _mockCache: Awaited<typeof import('@/data/mock')> | null = null
+async function getMock() {
+  if (!_mockCache) _mockCache = await import('@/data/mock')
+  return _mockCache
+}
 
 /** 统一 fetch 封装 */
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -29,7 +36,10 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 // ─── Categories ───
 
 export async function getCategories(): Promise<Category[]> {
-  if (!useApi) return mock.categories
+  if (!useApi) {
+    const mock = await getMock()
+    return mock.categories
+  }
   return apiFetch<Category[]>('/api/categories')
 }
 
@@ -43,6 +53,7 @@ export interface TrainerFilters {
 
 export async function getTrainers(filters?: TrainerFilters): Promise<Trainer[]> {
   if (!useApi) {
+    const mock = await getMock()
     let result = [...mock.trainers]
     if (filters?.featured) result = result.filter((t) => t.featured)
     if (filters?.city) result = result.filter((t) => t.city === filters.city)
@@ -68,6 +79,7 @@ export async function getTrainers(filters?: TrainerFilters): Promise<Trainer[]> 
 
 export async function getTrainerById(id: number): Promise<Trainer | null> {
   if (!useApi) {
+    const mock = await getMock()
     const trainer = mock.getTrainerById(id)
     if (!trainer) return null
     return { ...trainer, courses: mock.getCoursesByTrainerId(id) }
@@ -86,6 +98,7 @@ export interface CourseFilters {
 
 export async function getCourses(filters?: CourseFilters): Promise<Course[]> {
   if (!useApi) {
+    const mock = await getMock()
     let result = [...mock.courses]
     if (filters?.category) {
       const cat = mock.categories.find((c) => c.slug === filters.category)
@@ -115,7 +128,10 @@ export async function getCourses(filters?: CourseFilters): Promise<Course[]> {
 }
 
 export async function getCourseById(id: number): Promise<Course | null> {
-  if (!useApi) return mock.getCourseById(id) ?? null
+  if (!useApi) {
+    const mock = await getMock()
+    return mock.getCourseById(id) ?? null
+  }
   return apiFetch<Course>(`/api/courses/${id}`).catch(() => null)
 }
 
@@ -128,6 +144,7 @@ export async function getRelatedCourses(
   limit = 3
 ): Promise<Course[]> {
   if (!useApi) {
+    const mock = await getMock()
     return mock.courses
       .filter((c) => c.category_name === categoryName && c.id !== courseId)
       .slice(0, limit)
@@ -147,6 +164,7 @@ export async function getRelatedTrainers(
   limit = 3
 ): Promise<Trainer[]> {
   if (!useApi) {
+    const mock = await getMock()
     return mock.trainers
       .filter(
         (t) =>
@@ -220,11 +238,12 @@ export async function submitInquiry(
 
 // ─── Utils ───
 
-export function getAllCities(): string[] {
-  // 城市列表直接从 mock 数据获取（变化不频繁）
+export async function getAllCities(): Promise<string[]> {
+  const mock = await getMock()
   return mock.getAllCities()
 }
 
-export function getAllSpecialties(): string[] {
+export async function getAllSpecialties(): Promise<string[]> {
+  const mock = await getMock()
   return mock.getAllSpecialties()
 }
