@@ -90,6 +90,9 @@ const routes = [
   '/blog/automotive-industry-training-program',
   '/blog/training-budget-application-template',
   '/blog/training-full-process-management-guide',
+  '/blog/real-estate-industry-training-program',
+  '/blog/training-course-development-guide',
+  '/blog/cross-department-collaboration-training',
 ]
 
 /** 简易静态文件服务器 */
