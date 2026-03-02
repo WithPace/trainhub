@@ -12,6 +12,9 @@ echo "→ Deploying to gh-pages..."
 # 保存当前分支
 CURRENT_BRANCH=$(git branch --show-current)
 
+# 先 stash 未提交的文件，防止分支切换时丢失
+git stash --include-untracked -m "deploy-pages: auto stash" 2>/dev/null || true
+
 # 切换到 gh-pages
 git checkout gh-pages
 
@@ -43,4 +46,8 @@ fi
 
 # 切回原分支
 git checkout "$CURRENT_BRANCH"
+
+# 恢复之前 stash 的文件
+git stash pop 2>/dev/null || true
+
 echo "→ Done. Back on $CURRENT_BRANCH"
