@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react'
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck } from 'lucide-react'
 import { getBlogPostMetaBySlug, getRelatedPostsMeta } from '@/data/blog-meta'
 import PageHead from '@/components/seo/PageHead'
 import type { ContentBlock } from '@/data/blog-meta'
@@ -264,6 +264,30 @@ export default function BlogPostPage() {
           )}
         </div>
       </article>
+
+      {/* 需求诊断 CTA — 文章读完后引导转化 */}
+      <section className="border-t border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100">
+            <ClipboardCheck className="h-7 w-7 text-amber-600" />
+          </div>
+          <div className="text-center sm:text-left">
+            <h3 className="text-lg font-bold text-gray-900">
+              不确定企业需要什么培训？
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              3 分钟完成培训需求诊断，获取个性化培训建议和推荐方案
+            </p>
+            <Link
+              to="/assessment"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-amber-600"
+            >
+              免费诊断培训需求
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* 相关文章推荐 */}
       {relatedPosts.length > 0 && (

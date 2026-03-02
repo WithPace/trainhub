@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight, Search, X } from 'lucide-react'
 import { blogPostsMeta } from '@/data/blog-meta'
 import PageHead from '@/components/seo/PageHead'
 
@@ -8,6 +8,7 @@ const POSTS_PER_PAGE = 12
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('全部')
+  const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
   // 提取所有分类（去重）
@@ -16,11 +17,22 @@ export default function BlogPage() {
     return ['全部', ...cats]
   }, [])
 
-  // 按分类筛选
+  // 按分类 + 关键词筛选
   const filteredPosts = useMemo(() => {
-    if (selectedCategory === '全部') return blogPostsMeta
-    return blogPostsMeta.filter(post => post.category === selectedCategory)
-  }, [selectedCategory])
+    let posts = blogPostsMeta
+    if (selectedCategory !== '全部') {
+      posts = posts.filter(post => post.category === selectedCategory)
+    }
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase()
+      posts = posts.filter(post =>
+        post.title.toLowerCase().includes(query) ||
+        post.excerpt.toLowerCase().includes(query) ||
+        post.tags.some(tag => tag.toLowerCase().includes(query))
+      )
+    }
+    return posts
+  }, [selectedCategory, searchQuery])
 
   // 分页计算
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
@@ -32,6 +44,12 @@ export default function BlogPage() {
   // 切换分类时重置到第一页
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
+    setCurrentPage(1)
+  }
+
+  // 搜索输入变化时重置到第一页
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value)
     setCurrentPage(1)
   }
 
@@ -93,9 +111,11 @@ export default function BlogPage() {
   }, [])
 
   // 文章数量显示文案
-  const countLabel = selectedCategory === '全部'
-    ? `共 ${filteredPosts.length} 篇文章`
-    : `${selectedCategory} (${filteredPosts.length})`
+  const countLabel = searchQuery.trim()
+    ? `搜索"${searchQuery.trim()}"找到 ${filteredPosts.length} 篇文章`
+    : selectedCategory === '全部'
+      ? `共 ${filteredPosts.length} 篇文章`
+      : `${selectedCategory} (${filteredPosts.length})`
 
   return (
     <div>
@@ -117,6 +137,27 @@ export default function BlogPage() {
       {/* 文章列表 */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+          {/* 搜索框 */}
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => handleSearchChange(e.target.value)}
+              placeholder="搜索文章标题、内容或标签..."
+              className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => handleSearchChange('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
           {/* 分类筛选标签 */}
           <div className="mb-6 flex flex-wrap gap-2">
             {allCategories.map(category => (
@@ -137,6 +178,20 @@ export default function BlogPage() {
 
           {/* 文章数量 */}
           <p className="mb-6 text-sm text-gray-500">{countLabel}</p>
+
+          {/* 无结果提示 */}
+          {filteredPosts.length === 0 && (
+            <div className="py-12 text-center">
+              <p className="text-gray-500">没有找到匹配的文章</p>
+              <button
+                type="button"
+                onClick={() => { handleSearchChange(''); setSelectedCategory('全部') }}
+                className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                清除筛选条件
+              </button>
+            </div>
+          )}
 
           {/* 文章卡片网格 */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
