@@ -227,6 +227,36 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/training-needs-analysis-methods</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/digital-training-trends-2026</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/annual-training-plan-design</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/online-vs-offline-training</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/training-effectiveness-evaluation</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Course detail pages -->
   <url>
     <loc>https://withpace.github.io/trainhub/courses/1</loc>
