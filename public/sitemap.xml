@@ -413,6 +413,25 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- Cycle #56 new blog posts -->
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/china-training-market-trends-2026</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/training-contract-agreement-template</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://withpace.github.io/trainhub/blog/high-potential-talent-development-program</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Course detail pages -->
   <url>
     <loc>https://withpace.github.io/trainhub/courses/1</loc>
