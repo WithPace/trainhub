@@ -21,14 +21,11 @@ git stash --include-untracked -m "deploy-pages: auto stash" 2>/dev/null || true
 # 切换到 gh-pages
 git checkout gh-pages
 
-# 清理旧构建产物（保留 .git 和不需要的目录）
+# 清理旧构建产物（只保留 .git 和 dist）
 find . -maxdepth 1 \
   ! -name '.' \
   ! -name '..' \
   ! -name '.git' \
-  ! -name '.gitignore' \
-  ! -name 'node_modules' \
-  ! -name '.wrangler' \
   ! -name 'dist' \
   -exec rm -rf {} +
 
@@ -36,6 +33,14 @@ find . -maxdepth 1 \
 cp -r dist/* .
 # SPA fallback: 404.html 处理 client-side routing
 cp dist/index.html 404.html
+
+# 创建 .gitignore 防止 node_modules 等意外纳入
+cat > .gitignore << 'GITIGNORE'
+node_modules/
+.wrangler/
+dist/
+*.log
+GITIGNORE
 
 # 提交并推送
 git add -A
