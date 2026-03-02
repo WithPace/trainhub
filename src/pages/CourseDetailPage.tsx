@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Clock, Users, DollarSign, CheckCircle } from 'lucide-react'
-import { getCourseById as fetchCourse, getTrainerById as fetchTrainer } from '@/services/api'
+import { getCourseById as fetchCourse, getTrainerById as fetchTrainer, getRelatedCourses } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import CategoryBadge from '@/components/ui/CategoryBadge'
+import CourseCard from '@/components/ui/CourseCard'
 import InquiryModal from '@/components/ui/InquiryModal'
 import ReviewSection from '@/components/ui/ReviewSection'
 import ShareButtons from '@/components/ui/ShareButtons'
@@ -39,6 +40,14 @@ export default function CourseDetailPage() {
   const { data: trainer } = useQuery(
     () => (course ? fetchTrainer(course.trainer_id) : Promise.resolve(null)),
     [course?.trainer_id]
+  )
+
+  const { data: relatedCourses } = useQuery(
+    () =>
+      course?.category_name
+        ? getRelatedCourses(course.id, course.category_name, 3)
+        : Promise.resolve([]),
+    [course?.id, course?.category_name]
   )
 
   if (courseLoading) {
@@ -193,6 +202,20 @@ export default function CourseDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* 相关课程推荐 */}
+      {relatedCourses && relatedCourses.length > 0 && (
+        <section className="mt-12 border-t border-gray-200 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="text-xl font-bold text-gray-900">相关课程</h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {relatedCourses.map((c) => (
+                <CourseCard key={c.id} course={c} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 咨询弹窗 */}
       <InquiryModal

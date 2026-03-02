@@ -119,6 +119,50 @@ export async function getCourseById(id: number): Promise<Course | null> {
   return apiFetch<Course>(`/api/courses/${id}`).catch(() => null)
 }
 
+// ─── Related / Recommendations ───
+
+/** 获取同分类的相关课程（排除当前课程） */
+export async function getRelatedCourses(
+  courseId: number,
+  categoryName: string,
+  limit = 3
+): Promise<Course[]> {
+  if (!useApi) {
+    return mock.courses
+      .filter((c) => c.category_name === categoryName && c.id !== courseId)
+      .slice(0, limit)
+  }
+  const params = new URLSearchParams({
+    exclude: String(courseId),
+    category: categoryName,
+    limit: String(limit),
+  })
+  return apiFetch<Course[]>(`/api/courses/related?${params}`)
+}
+
+/** 获取同领域的相关培训师（排除当前培训师） */
+export async function getRelatedTrainers(
+  trainerId: number,
+  categories: string[],
+  limit = 3
+): Promise<Trainer[]> {
+  if (!useApi) {
+    return mock.trainers
+      .filter(
+        (t) =>
+          t.id !== trainerId &&
+          t.specialties.some((s) => categories.includes(s))
+      )
+      .slice(0, limit)
+  }
+  const params = new URLSearchParams({
+    exclude: String(trainerId),
+    specialties: categories.join(','),
+    limit: String(limit),
+  })
+  return apiFetch<Trainer[]>(`/api/trainers/related?${params}`)
+}
+
 // ─── Inquiries ───
 
 /** 外部表单服务端点（Formspree / Getform / Web3Forms 等） */

@@ -39,7 +39,7 @@ const routes = [
   '/topics/hr',
   '/topics/finance',
   '/topics/communication',
-  // 博客文章 (13)
+  // 博客文章 (20)
   '/blog/enterprise-training-industry-disruption',
   '/blog/how-to-choose-ai-training-course',
   '/blog/leadership-training-trends-2026',
@@ -55,6 +55,11 @@ const routes = [
   '/blog/training-effectiveness-evaluation',
   '/blog/how-to-choose-training-provider',
   '/blog/new-employee-onboarding-training-guide',
+  '/blog/how-to-build-internal-training-system',
+  '/blog/middle-management-training-courses',
+  '/blog/team-building-training-program',
+  '/blog/sales-team-training-program',
+  '/blog/how-to-choose-training-platform',
 ]
 
 /** 简易静态文件服务器 */

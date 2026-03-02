@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Star, MapPin, Briefcase, Mail } from 'lucide-react'
-import { getTrainerById as fetchTrainer } from '@/services/api'
+import { getTrainerById as fetchTrainer, getRelatedTrainers } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import { getAvatarUrl } from '@/lib/utils'
 import CourseCard from '@/components/ui/CourseCard'
+import TrainerCard from '@/components/ui/TrainerCard'
 import InquiryModal from '@/components/ui/InquiryModal'
 import ReviewSection from '@/components/ui/ReviewSection'
 import ShareButtons from '@/components/ui/ShareButtons'
@@ -25,6 +26,14 @@ export default function TrainerDetailPage() {
   const { data: trainer, loading } = useQuery(
     () => fetchTrainer(trainerId),
     [trainerId]
+  )
+
+  const { data: relatedTrainers } = useQuery(
+    () =>
+      trainer
+        ? getRelatedTrainers(trainer.id, trainer.specialties, 3)
+        : Promise.resolve([]),
+    [trainer?.id, trainer?.specialties]
   )
 
   if (loading) {
@@ -151,6 +160,20 @@ export default function TrainerDetailPage() {
         {/* 学员评价 */}
         <ReviewSection reviews={trainerReviews} />
       </div>
+
+      {/* 同领域培训师推荐 */}
+      {relatedTrainers && relatedTrainers.length > 0 && (
+        <section className="mt-12 border-t border-gray-200 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="text-xl font-bold text-gray-900">同领域培训师</h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {relatedTrainers.map((t) => (
+                <TrainerCard key={t.id} trainer={t} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 咨询弹窗 */}
       <InquiryModal
