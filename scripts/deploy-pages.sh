@@ -7,6 +7,9 @@ set -euo pipefail
 echo "→ Building..."
 npm run build
 
+echo "→ Prerendering routes for SEO..."
+node scripts/prerender.mjs
+
 echo "→ Deploying to gh-pages..."
 
 # 保存当前分支

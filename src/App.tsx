@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from '@/components/layout/Layout'
+import { usePageTracking } from '@/hooks/usePageTracking'
 import HomePage from '@/pages/HomePage'
 import TrainersPage from '@/pages/TrainersPage'
 import TrainerDetailPage from '@/pages/TrainerDetailPage'
@@ -12,6 +13,8 @@ import JoinPage from '@/pages/JoinPage'
 import AboutPage from '@/pages/AboutPage'
 
 export default function App() {
+  usePageTracking()
+
   return (
     <Layout>
       <Routes>
