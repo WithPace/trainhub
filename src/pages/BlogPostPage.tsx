@@ -99,16 +99,17 @@ export default function BlogPostPage() {
   const meta = slug ? getBlogPostMetaBySlug(slug) : undefined
   const relatedPosts = slug ? getRelatedPostsMeta(slug, 3) : []
 
-  // 文章正文按需加载（从 blog.ts 动态 import）
+  // 文章正文按需加载（每篇文章独立 chunk，~8-21KB，替代旧的 540KB 全量加载）
   const [content, setContent] = useState<ContentBlock[] | null>(null)
 
   useEffect(() => {
     if (!slug) return
     setContent(null) // 切换文章时重置
-    import('@/data/blog').then(mod => {
-      const post = mod.getBlogPostBySlug(slug)
-      if (post) setContent(post.content)
-    })
+    import('@/data/blog-loader').then(({ loadBlogPost }) =>
+      loadBlogPost(slug).then(post => {
+        if (post) setContent(post.content)
+      })
+    )
   }, [slug])
 
   // 设置页面标题和 JSON-LD
