@@ -18,6 +18,8 @@ const JoinPage = lazy(() => import('@/pages/JoinPage'))
 const FAQPage = lazy(() => import('@/pages/FAQPage'))
 const MatchPage = lazy(() => import('@/pages/MatchPage'))
 const AboutPage = lazy(() => import('@/pages/AboutPage'))
+const AssessmentPage = lazy(() => import('@/pages/AssessmentPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 /** 页面加载占位 — 轻量 skeleton，避免布局闪烁 */
 function PageFallback() {
@@ -47,6 +49,8 @@ export default function App() {
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/match" element={<MatchPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
       <FloatingContact />

@@ -140,6 +140,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Assessment tool page -->
+  <url>
+    <loc>https://withpace.github.io/trainhub/assessment</loc>
+    <lastmod>2026-03-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- Blog pages -->
   <url>
     <loc>https://withpace.github.io/trainhub/blog</loc>

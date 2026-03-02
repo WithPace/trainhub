@@ -12,10 +12,12 @@ import {
   Star,
   MapPin,
   CheckCircle,
+  MessageSquare,
 } from 'lucide-react'
 import { categories, trainers, courses } from '@/data/mock'
 import { getAvatarUrl, cn } from '@/lib/utils'
 import { JsonLd } from '@/components/seo/JsonLd'
+import InquiryModal from '@/components/ui/InquiryModal'
 import type { Course, Trainer } from '@/types'
 
 // ──────────────────── 问题定义 ────────────────────
@@ -274,6 +276,19 @@ export default function MatchPage() {
   const [answers, setAnswers] = useState<Answers>({})
   const [showResults, setShowResults] = useState(false)
 
+  // 咨询弹窗状态
+  const [inquiryOpen, setInquiryOpen] = useState(false)
+  const [inquiryCourseId, setInquiryCourseId] = useState<number | undefined>()
+  const [inquiryTrainerId, setInquiryTrainerId] = useState<number | undefined>()
+  const [inquiryTitle, setInquiryTitle] = useState<string | undefined>()
+
+  const handleOpenInquiry = (courseId: number, trainerId: number, courseTitle: string) => {
+    setInquiryCourseId(courseId)
+    setInquiryTrainerId(trainerId)
+    setInquiryTitle(`咨询课程: ${courseTitle}`)
+    setInquiryOpen(true)
+  }
+
   const currentQuestion = questions[step]
   const totalSteps = questions.length
   const progress = showResults ? 100 : ((step) / totalSteps) * 100
@@ -438,7 +453,12 @@ export default function MatchPage() {
             {topResults.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {topResults.map((result, index) => (
-                  <MatchResultCard key={result.course.id} result={result} rank={index + 1} />
+                  <MatchResultCard
+                    key={result.course.id}
+                    result={result}
+                    rank={index + 1}
+                    onInquiry={handleOpenInquiry}
+                  />
                 ))}
               </div>
             ) : (
@@ -501,13 +521,30 @@ export default function MatchPage() {
           </div>
         </div>
       </section>
+
+      {/* 咨询弹窗 */}
+      <InquiryModal
+        isOpen={inquiryOpen}
+        onClose={() => setInquiryOpen(false)}
+        courseId={inquiryCourseId}
+        trainerId={inquiryTrainerId}
+        title={inquiryTitle}
+      />
     </div>
   )
 }
 
 // ──────────────────── 结果卡片组件 ────────────────────
 
-function MatchResultCard({ result, rank }: { result: MatchResult; rank: number }) {
+function MatchResultCard({
+  result,
+  rank,
+  onInquiry,
+}: {
+  result: MatchResult
+  rank: number
+  onInquiry: (courseId: number, trainerId: number, courseTitle: string) => void
+}) {
   const { course, trainer, score, reasons } = result
   const avatarUrl = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
 
@@ -610,13 +647,23 @@ function MatchResultCard({ result, rank }: { result: MatchResult; rank: number }
 
       {/* 操作 */}
       <div className="border-t border-gray-100 px-4 py-3">
-        <Link
-          to={`/courses/${course.id}`}
-          className="flex items-center justify-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-        >
-          查看课程详情
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/courses/${course.id}`}
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-gray-200 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700"
+          >
+            查看详情
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => onInquiry(course.id, trainer.id, course.title)}
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            <MessageSquare className="h-4 w-4" />
+            立即咨询
+          </button>
+        </div>
       </div>
     </div>
   )

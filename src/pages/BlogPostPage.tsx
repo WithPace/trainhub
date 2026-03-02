@@ -142,7 +142,7 @@ export default function BlogPostPage() {
       headline: meta.title,
       description: meta.excerpt,
       author: {
-        '@type': 'Organization',
+        '@type': 'Person',
         name: meta.author,
       },
       publisher: {

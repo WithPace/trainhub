@@ -1,9 +1,67 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { blogPostsMeta } from '@/data/blog-meta'
 
+const POSTS_PER_PAGE = 12
+
 export default function BlogPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>('全部')
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // 提取所有分类（去重）
+  const allCategories = useMemo(() => {
+    const cats = Array.from(new Set(blogPostsMeta.map(post => post.category)))
+    return ['全部', ...cats]
+  }, [])
+
+  // 按分类筛选
+  const filteredPosts = useMemo(() => {
+    if (selectedCategory === '全部') return blogPostsMeta
+    return blogPostsMeta.filter(post => post.category === selectedCategory)
+  }, [selectedCategory])
+
+  // 分页计算
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
+  const paginatedPosts = useMemo(() => {
+    const start = (currentPage - 1) * POSTS_PER_PAGE
+    return filteredPosts.slice(start, start + POSTS_PER_PAGE)
+  }, [filteredPosts, currentPage])
+
+  // 切换分类时重置到第一页
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category)
+    setCurrentPage(1)
+  }
+
+  // 生成页码列表（最多显示 7 个页码，中间省略）
+  const pageNumbers = useMemo(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    }
+
+    const pages: (number | 'ellipsis')[] = [1]
+
+    if (currentPage > 3) {
+      pages.push('ellipsis')
+    }
+
+    const start = Math.max(2, currentPage - 1)
+    const end = Math.min(totalPages - 1, currentPage + 1)
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i)
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push('ellipsis')
+    }
+
+    pages.push(totalPages)
+
+    return pages
+  }, [currentPage, totalPages])
+
   // 设置页面标题和 JSON-LD
   useEffect(() => {
     document.title = '行业洞察 - TrainHub | 企业培训行业趋势与最佳实践'
@@ -35,12 +93,17 @@ export default function BlogPage() {
     }
   }, [])
 
+  // 文章数量显示文案
+  const countLabel = selectedCategory === '全部'
+    ? `共 ${filteredPosts.length} 篇文章`
+    : `${selectedCategory} (${filteredPosts.length})`
+
   return (
     <div>
       {/* 页面头部 */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 px-4 py-16 text-white sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-3xl font-bold sm:text-4xl">行业洞察</h1>
+          <h1 className="text-3xl font-bold sm:text-4xl">��业洞察</h1>
           <p className="mt-4 text-lg text-blue-100">
             企业培训行业的最新趋势、最佳实践和深度分析
           </p>
@@ -50,8 +113,30 @@ export default function BlogPage() {
       {/* 文章列表 */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+          {/* 分类筛选标签 */}
+          <div className="mb-6 flex flex-wrap gap-2">
+            {allCategories.map(category => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => handleCategoryChange(category)}
+                className={
+                  selectedCategory === category
+                    ? 'rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors'
+                    : 'rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:border-blue-300 hover:text-blue-600'
+                }
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* 文章数量 */}
+          <p className="mb-6 text-sm text-gray-500">{countLabel}</p>
+
+          {/* 文章卡片网格 */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {blogPostsMeta.map(post => (
+            {paginatedPosts.map(post => (
               <article
                 key={post.id}
                 className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:border-blue-300 hover:shadow-lg"
@@ -73,7 +158,7 @@ export default function BlogPage() {
                     <Link to={`/blog/${post.id}`}>{post.title}</Link>
                   </h2>
 
-                  {/* 摘要 */}
+                  {/* ��要 */}
                   <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-500">
                     {post.excerpt}
                   </p>
@@ -95,6 +180,55 @@ export default function BlogPage() {
               </article>
             ))}
           </div>
+
+          {/* 分页器 */}
+          {totalPages > 1 && (
+            <nav className="mt-10 flex items-center justify-center gap-1" aria-label="分页导航">
+              {/* 上一页 */}
+              <button
+                type="button"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="flex h-9 items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                上一页
+              </button>
+
+              {/* 页码 */}
+              {pageNumbers.map((page, index) =>
+                page === 'ellipsis' ? (
+                  <span key={`ellipsis-${index}`} className="px-2 text-sm text-gray-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    className={
+                      currentPage === page
+                        ? 'flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-sm font-medium text-white'
+                        : 'flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50'
+                    }
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+
+              {/* 下一页 */}
+              <button
+                type="button"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="flex h-9 items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                下一页
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </nav>
+          )}
         </div>
       </section>
 
