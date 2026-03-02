@@ -75,6 +75,9 @@ const routes = [
   '/blog/energy-industry-training-program',
   '/blog/training-effectiveness-tracking-template',
   '/blog/catering-industry-training-program',
+  '/blog/construction-industry-training-program',
+  '/blog/training-project-proposal-template',
+  '/blog/internal-trainer-development-system',
 ]
 
 /** 简易静态文件服务器 */
