@@ -63,12 +63,17 @@ function startServer() {
       '.woff2': 'font/woff2',
     }
 
+    // 预渲染 / 路由会覆盖 dist/index.html，预先缓存 SPA shell 到内存
+    const spaShell = readFileSync(join(DIST_DIR, 'index.html'))
+
     const server = createServer((req, res) => {
       let filePath = join(DIST_DIR, req.url.replace(BASE_PATH, ''))
 
-      // SPA fallback: 所有非文件请求返回 index.html
+      // SPA fallback: 所有非文件请求返回缓存的 SPA shell
       if (!filePath.includes('.')) {
-        filePath = join(DIST_DIR, 'index.html')
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.end(spaShell)
+        return
       }
 
       try {
@@ -77,10 +82,9 @@ function startServer() {
         res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' })
         res.end(content)
       } catch {
-        // fallback to index.html
-        const content = readFileSync(join(DIST_DIR, 'index.html'))
+        // fallback to cached SPA shell
         res.writeHead(200, { 'Content-Type': 'text/html' })
-        res.end(content)
+        res.end(spaShell)
       }
     })
 
