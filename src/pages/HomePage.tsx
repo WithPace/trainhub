@@ -179,19 +179,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA — 企业咨询 */}
-      <section className="bg-blue-600 px-4 py-16 text-center text-white sm:px-6 lg:px-8">
+      {/* CTA — 智能匹配 */}
+      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-16 text-center text-white sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
-          <h2 className="text-2xl font-bold sm:text-3xl">需要定制化企业培训方案？</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">不知道选哪个？试试智能匹配</h2>
           <p className="mt-3 text-blue-100">
-            告诉我们您的需求，我们为您匹配最合适的培训师和课程
+            回答 5 个简单问题，AI 为您推荐最适合的培训师和课程
           </p>
-          <Link
-            to="/about"
-            className="mt-6 inline-block rounded-lg bg-white px-8 py-3 font-medium text-blue-600 transition-colors hover:bg-blue-50"
-          >
-            免费咨询
-          </Link>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link
+              to="/match"
+              className="inline-block rounded-lg bg-white px-8 py-3 font-medium text-blue-600 transition-colors hover:bg-blue-50"
+            >
+              开始智能匹配
+            </Link>
+            <Link
+              to="/about"
+              className="inline-block rounded-lg border border-white/30 px-8 py-3 font-medium text-white transition-colors hover:bg-white/10"
+            >
+              免费咨询
+            </Link>
+          </div>
         </div>
       </section>
 

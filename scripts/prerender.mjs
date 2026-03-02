@@ -26,6 +26,7 @@ const routes = [
   '/blog',
   '/join',
   '/faq',
+  '/match',
   '/about',
   // 培训师详情 (15)
   ...Array.from({ length: 15 }, (_, i) => `/trainers/${i + 1}`),

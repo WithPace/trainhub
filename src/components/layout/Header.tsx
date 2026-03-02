@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 
 const navItems = [
   { label: '首页', path: '/' },
+  { label: '智能匹配', path: '/match' },
   { label: '培训师', path: '/trainers' },
   { label: '课程', path: '/courses' },
   { label: '行业洞察', path: '/blog' },

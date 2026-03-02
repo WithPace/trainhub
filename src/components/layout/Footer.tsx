@@ -42,6 +42,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/match" className="text-sm text-gray-500 hover:text-blue-600">
+                  智能匹配
+                </Link>
+              </li>
+              <li>
                 <Link to="/faq" className="text-sm text-gray-500 hover:text-blue-600">
                   常见问题
                 </Link>

@@ -12,6 +12,7 @@ import BlogPage from '@/pages/BlogPage'
 import BlogPostPage from '@/pages/BlogPostPage'
 import JoinPage from '@/pages/JoinPage'
 import FAQPage from '@/pages/FAQPage'
+import MatchPage from '@/pages/MatchPage'
 import AboutPage from '@/pages/AboutPage'
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/join" element={<JoinPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/match" element={<MatchPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
       <FloatingContact />
