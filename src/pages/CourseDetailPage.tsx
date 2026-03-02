@@ -5,6 +5,9 @@ import { getCourseById as fetchCourse, getTrainerById as fetchTrainer } from '@/
 import { useQuery } from '@/hooks/useQuery'
 import CategoryBadge from '@/components/ui/CategoryBadge'
 import InquiryModal from '@/components/ui/InquiryModal'
+import ReviewSection from '@/components/ui/ReviewSection'
+import ShareButtons from '@/components/ui/ShareButtons'
+import { getReviewsByCourseId } from '@/data/reviews'
 import {
   JsonLd,
   BreadcrumbNav,
@@ -58,6 +61,7 @@ export default function CourseDetailPage() {
   }
 
   const breadcrumbs = courseBreadcrumbs(course.title)
+  const courseReviews = getReviewsByCourseId(course.id)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -113,7 +117,13 @@ export default function CourseDetailPage() {
             <div className="mt-8">
               <h2 className="text-xl font-bold text-gray-900">适合人群</h2>
               <p className="mt-3 text-gray-600">{course.target_audience}</p>
+              <div className="mt-4">
+                <ShareButtons title={`${course.title} | TrainHub`} />
+              </div>
             </div>
+
+            {/* 课程评价 */}
+            <ReviewSection reviews={courseReviews} title="课程评价" />
           </div>
 
           {/* 右侧：课程信息卡片 */}

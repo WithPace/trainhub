@@ -6,6 +6,9 @@ import { useQuery } from '@/hooks/useQuery'
 import { getAvatarUrl } from '@/lib/utils'
 import CourseCard from '@/components/ui/CourseCard'
 import InquiryModal from '@/components/ui/InquiryModal'
+import ReviewSection from '@/components/ui/ReviewSection'
+import ShareButtons from '@/components/ui/ShareButtons'
+import { getReviewsByTrainerId } from '@/data/reviews'
 import {
   JsonLd,
   BreadcrumbNav,
@@ -46,11 +49,12 @@ export default function TrainerDetailPage() {
   const trainerCourses = trainer.courses ?? []
   const avatarSrc = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
   const breadcrumbs = trainerBreadcrumbs(trainer.name)
+  const trainerReviews = getReviewsByTrainerId(trainer.id)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
       {/* 结构化数据 */}
-      <JsonLd data={buildPersonSchema(trainer)} />
+      <JsonLd data={buildPersonSchema(trainer, trainerReviews)} />
       <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
 
       <div className="mx-auto max-w-5xl">
@@ -122,6 +126,9 @@ export default function TrainerDetailPage() {
           <div className="mt-8 border-t border-gray-200 pt-6">
             <h2 className="text-lg font-semibold text-gray-900">个人简介</h2>
             <p className="mt-3 leading-relaxed text-gray-600">{trainer.bio}</p>
+            <div className="mt-4">
+              <ShareButtons title={`${trainer.name} - ${trainer.title} | TrainHub`} />
+            </div>
           </div>
         </div>
 
@@ -140,6 +147,9 @@ export default function TrainerDetailPage() {
             <p className="mt-4 text-gray-500">暂无课程</p>
           )}
         </div>
+
+        {/* 学员评价 */}
+        <ReviewSection reviews={trainerReviews} />
       </div>
 
       {/* 咨询弹窗 */}

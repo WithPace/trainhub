@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle, Users, BookOpen, Award } from 'lucide-react'
+import { ArrowRight, CheckCircle, Users, BookOpen, Award, Shield, Zap, TrendingUp } from 'lucide-react'
 import { getCategories, getTrainers, getCourses } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import TrainerCard from '@/components/ui/TrainerCard'
@@ -130,6 +130,51 @@ export default function HomePage() {
             {(featuredCourses ?? []).map(course => (
               <CourseCard key={course.id} course={course} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 为什么选择 TrainHub */}
+      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900">为什么选择 TrainHub</h2>
+            <p className="mt-2 text-gray-500">企业培训采购的更优解</p>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+                <Shield className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">严选师资，质量保障</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                每位培训师经过资质审核、授课评估和学员反馈三重筛选。平均从业经验14年，累计服务企业超过2000家。拒绝"PPT朗读者"，只推荐真正能落地的实战派。
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
+                <Zap className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">去中间商，透明定价</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                传统培训采购经过3-4层中间商，价格虚高50%-200%。TrainHub让企业直接对接培训师，课程大纲、价格区间、学员评价全部公开透明，不花冤枉钱。
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
+                <TrendingUp className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold text-gray-900">数据驱动，精准匹配</h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                基于行业、规模、培训目标智能推荐最合适的培训师和课程。覆盖领导力、销售、数字化转型等6大核心领域，从需求到落地一站式解决。
+              </p>
+            </div>
+          </div>
+          <div className="mt-10 rounded-xl bg-gray-50 p-6 text-center">
+            <p className="text-sm leading-relaxed text-gray-600">
+              中国企业培训市场规模超过<span className="font-semibold text-gray-900">6000亿元</span>，但企业找到合适培训师的平均周期长达<span className="font-semibold text-gray-900">3-4周</span>。
+              TrainHub 致力于缩短这个周期到<span className="font-semibold text-blue-600">3天</span>，让每一笔培训预算都花在刀刃上。
+            </p>
           </div>
         </div>
       </section>

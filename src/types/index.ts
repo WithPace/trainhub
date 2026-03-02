@@ -51,6 +51,18 @@ export interface Course {
   category_slug?: string
 }
 
+export interface Review {
+  id: number
+  trainer_id: number
+  course_id?: number
+  author: string
+  company: string
+  role: string
+  rating: number
+  content: string
+  date: string
+}
+
 export interface Inquiry {
   course_id?: number
   trainer_id?: number

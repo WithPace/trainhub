@@ -1,4 +1,4 @@
-import type { Trainer, Course } from '@/types'
+import type { Trainer, Course, Review } from '@/types'
 
 const BASE_URL = 'https://withpace.github.io/trainhub'
 
@@ -21,9 +21,10 @@ export function JsonLd({ data }: JsonLdProps) {
 
 // ---- Schema 构建函数 ----
 
-/** 构建培训师 Person 结构化数据 */
-export function buildPersonSchema(trainer: Trainer) {
-  return {
+/** 构建培训师 Person 结构化数据（含评价） */
+export function buildPersonSchema(trainer: Trainer, reviews?: Review[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const schema: Record<string, any> = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: trainer.name,
@@ -38,8 +39,20 @@ export function buildPersonSchema(trainer: Trainer) {
       '@type': 'AggregateRating',
       ratingValue: String(trainer.rating),
       reviewCount: String(trainer.review_count),
+      bestRating: '5',
+      worstRating: '1',
     },
   }
+  if (reviews && reviews.length > 0) {
+    schema.review = reviews.map(r => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.author },
+      reviewRating: { '@type': 'Rating', ratingValue: String(r.rating), bestRating: '5' },
+      reviewBody: r.content,
+      datePublished: r.date,
+    }))
+  }
+  return schema
 }
 
 /** 构建课程 Course 结构化数据 */
