@@ -6,7 +6,6 @@ interface ShareButtonsProps {
 /** 社交分享按钮组 */
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '')
-  const encodedTitle = encodeURIComponent(title)
   const encodedUrl = encodeURIComponent(shareUrl)
 
   return (

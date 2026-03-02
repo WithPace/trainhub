@@ -8,6 +8,7 @@ const navItems = [
   { label: '培训师', path: '/trainers' },
   { label: '课程', path: '/courses' },
   { label: '行业洞察', path: '/blog' },
+  { label: '常见问题', path: '/faq' },
   { label: '培训师入驻', path: '/join' },
   { label: '关于我们', path: '/about' },
 ]

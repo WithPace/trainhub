@@ -42,6 +42,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/faq" className="text-sm text-gray-500 hover:text-blue-600">
+                  常见问题
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-sm text-gray-500 hover:text-blue-600">
                   关于我们
                 </Link>

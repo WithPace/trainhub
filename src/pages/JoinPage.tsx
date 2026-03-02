@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CheckCircle, Star, TrendingUp, Users, Shield, Award } from 'lucide-react'
+import { CheckCircle, Star, TrendingUp, Users } from 'lucide-react'
 import { trainers } from '@/data/mock'
 import { getAvatarUrl } from '@/lib/utils'
 

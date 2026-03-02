@@ -5,6 +5,25 @@ import { useQuery } from '@/hooks/useQuery'
 import CourseCard from '@/components/ui/CourseCard'
 import SearchBar from '@/components/ui/SearchBar'
 
+/** 从 "30000-50000" 格式的 price_range 中提取最低价 */
+function getMinPrice(priceRange: string): number {
+  const low = priceRange.split('-')[0]
+  return parseInt(low, 10) || 0
+}
+
+const priceRanges = [
+  { label: '全部价格', min: 0, max: Infinity },
+  { label: '2万以下', min: 0, max: 20000 },
+  { label: '2-4万', min: 20000, max: 40000 },
+  { label: '4万以上', min: 40000, max: Infinity },
+]
+
+const durationOptions = [
+  { label: '全部时长', value: '' },
+  { label: '半天/1天', value: '1' },
+  { label: '2天', value: '2' },
+]
+
 export default function CoursesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialQuery = searchParams.get('q') ?? ''
@@ -12,6 +31,8 @@ export default function CoursesPage() {
 
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
+  const [selectedPriceRange, setSelectedPriceRange] = useState(0)
+  const [selectedDuration, setSelectedDuration] = useState('')
 
   const { data: allCourses, loading } = useQuery(() => getCourses(), [])
   const { data: categories } = useQuery(() => getCategories(), [])
@@ -28,6 +49,8 @@ export default function CoursesPage() {
   // 客户端筛选
   const filteredCourses = useMemo(() => {
     if (!allCourses) return []
+    const priceRange = priceRanges[selectedPriceRange]
+
     return allCourses.filter(course => {
       const matchesSearch =
         !searchQuery ||
@@ -38,9 +61,23 @@ export default function CoursesPage() {
       const matchesCategory =
         !selectedCategory || course.category_slug === selectedCategory
 
-      return matchesSearch && matchesCategory
+      const minPrice = getMinPrice(course.price_range)
+      const matchesPrice =
+        selectedPriceRange === 0 ||
+        (minPrice >= priceRange.min && minPrice < priceRange.max)
+
+      const matchesDuration =
+        !selectedDuration ||
+        (selectedDuration === '1' && course.duration.includes('1天')) ||
+        (selectedDuration === '1' && course.duration.includes('半天')) ||
+        (selectedDuration === '2' && course.duration.includes('2天'))
+
+      return matchesSearch && matchesCategory && matchesPrice && matchesDuration
     })
-  }, [allCourses, searchQuery, selectedCategory])
+  }, [allCourses, searchQuery, selectedCategory, selectedPriceRange, selectedDuration])
+
+  const hasFilters = searchQuery || selectedCategory || selectedPriceRange !== 0 || selectedDuration
+  const selectClass = 'rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -53,13 +90,32 @@ export default function CoursesPage() {
           </p>
         </div>
 
-        {/* 搜索 */}
-        <div className="mt-8">
+        {/* 搜索 + 筛选 */}
+        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="搜索课程名称、培训师..."
+            className="flex-1 sm:min-w-[240px]"
           />
+          <select
+            value={selectedPriceRange}
+            onChange={e => setSelectedPriceRange(Number(e.target.value))}
+            className={selectClass}
+          >
+            {priceRanges.map((range, i) => (
+              <option key={i} value={i}>{range.label}</option>
+            ))}
+          </select>
+          <select
+            value={selectedDuration}
+            onChange={e => setSelectedDuration(e.target.value)}
+            className={selectClass}
+          >
+            {durationOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
         </div>
 
         {/* 分类标签筛选 */}
@@ -91,10 +147,27 @@ export default function CoursesPage() {
           ))}
         </div>
 
-        {/* 结果计数 */}
-        <p className="mt-6 text-sm text-gray-500">
-          {loading ? '加载中...' : `共 ${filteredCourses.length} 门课程`}
-        </p>
+        {/* 结果计数 + 重置 */}
+        <div className="mt-6 flex items-center justify-between">
+          <p className="text-sm text-gray-500">
+            {loading ? '加载中...' : `共 ${filteredCourses.length} 门课程`}
+          </p>
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('')
+                setSelectedCategory('')
+                setSelectedPriceRange(0)
+                setSelectedDuration('')
+                setSearchParams({})
+              }}
+              className="text-sm text-blue-600 hover:text-blue-800"
+            >
+              清除筛选
+            </button>
+          )}
+        </div>
 
         {/* 课程列表 */}
         {filteredCourses.length > 0 ? (

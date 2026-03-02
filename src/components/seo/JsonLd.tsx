@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { Trainer, Course, Review } from '@/types'
 
 const BASE_URL = 'https://withpace.github.io/trainhub'

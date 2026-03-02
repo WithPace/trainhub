@@ -4,10 +4,18 @@ import { useQuery } from '@/hooks/useQuery'
 import TrainerCard from '@/components/ui/TrainerCard'
 import SearchBar from '@/components/ui/SearchBar'
 
+const experienceRanges = [
+  { label: '全部经验', min: 0, max: Infinity },
+  { label: '10年以下', min: 0, max: 10 },
+  { label: '10-15年', min: 10, max: 15 },
+  { label: '15年以上', min: 15, max: Infinity },
+]
+
 export default function TrainersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
+  const [selectedExpRange, setSelectedExpRange] = useState(0) // index into experienceRanges
 
   const { data: allTrainers, loading } = useQuery(() => getTrainers(), [])
   const cities = getAllCities()
@@ -16,6 +24,8 @@ export default function TrainersPage() {
   // 客户端筛选（数据量小，无需服务端筛选）
   const filteredTrainers = useMemo(() => {
     if (!allTrainers) return []
+    const expRange = experienceRanges[selectedExpRange]
+
     return allTrainers.filter(trainer => {
       const matchesSearch =
         !searchQuery ||
@@ -29,9 +39,15 @@ export default function TrainersPage() {
       const matchesSpecialty =
         !selectedSpecialty || trainer.specialties.includes(selectedSpecialty)
 
-      return matchesSearch && matchesCity && matchesSpecialty
+      const matchesExp =
+        selectedExpRange === 0 ||
+        (trainer.years_experience >= expRange.min && trainer.years_experience < expRange.max)
+
+      return matchesSearch && matchesCity && matchesSpecialty && matchesExp
     })
-  }, [allTrainers, searchQuery, selectedCity, selectedSpecialty])
+  }, [allTrainers, searchQuery, selectedCity, selectedSpecialty, selectedExpRange])
+
+  const selectClass = 'rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -45,17 +61,17 @@ export default function TrainersPage() {
         </div>
 
         {/* 搜索与筛选 */}
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="搜索培训师姓名、专长..."
-            className="flex-1"
+            className="flex-1 sm:min-w-[240px]"
           />
           <select
             value={selectedCity}
             onChange={e => setSelectedCity(e.target.value)}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={selectClass}
           >
             <option value="">全部城市</option>
             {cities.map(city => (
@@ -65,19 +81,44 @@ export default function TrainersPage() {
           <select
             value={selectedSpecialty}
             onChange={e => setSelectedSpecialty(e.target.value)}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className={selectClass}
           >
             <option value="">全部专长</option>
             {specialties.map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
+          <select
+            value={selectedExpRange}
+            onChange={e => setSelectedExpRange(Number(e.target.value))}
+            className={selectClass}
+          >
+            {experienceRanges.map((range, i) => (
+              <option key={i} value={i}>{range.label}</option>
+            ))}
+          </select>
         </div>
 
-        {/* 结果计数 */}
-        <p className="mt-6 text-sm text-gray-500">
-          {loading ? '加载中...' : `共 ${filteredTrainers.length} 位培训师`}
-        </p>
+        {/* 结果计数 + 重置按钮 */}
+        <div className="mt-6 flex items-center justify-between">
+          <p className="text-sm text-gray-500">
+            {loading ? '加载中...' : `共 ${filteredTrainers.length} 位培训师`}
+          </p>
+          {(searchQuery || selectedCity || selectedSpecialty || selectedExpRange !== 0) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('')
+                setSelectedCity('')
+                setSelectedSpecialty('')
+                setSelectedExpRange(0)
+              }}
+              className="text-sm text-blue-600 hover:text-blue-800"
+            >
+              清除筛选
+            </button>
+          )}
+        </div>
 
         {/* 培训师列表 */}
         {filteredTrainers.length > 0 ? (
