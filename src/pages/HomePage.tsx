@@ -47,7 +47,7 @@ export default function HomePage() {
 
       {/* 价值亮点 */}
       <section className="border-b border-gray-200 bg-white px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-4">
           {[
             { icon: Users, label: '严选培训师', value: '精挑细选' },
             { icon: BookOpen, label: '涵盖领域', value: '6大方向' },
@@ -75,7 +75,7 @@ export default function HomePage() {
               <Link
                 key={cat.id}
                 to={`/topics/${cat.slug}`}
-                className="group rounded-xl border border-gray-200 p-6 text-center transition-all hover:border-blue-300 hover:shadow-md"
+                className="group rounded-xl border border-gray-200 p-4 text-center transition-all hover:border-blue-300 hover:shadow-md sm:p-6"
               >
                 <span className="text-4xl">{cat.icon}</span>
                 <h3 className="mt-3 font-semibold text-gray-900 group-hover:text-blue-600">

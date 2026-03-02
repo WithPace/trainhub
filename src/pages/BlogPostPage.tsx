@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react'
-import { getBlogPostBySlug, getRelatedPosts } from '@/data/blog'
-import type { ContentBlock } from '@/data/blog'
+import { getBlogPostMetaBySlug, getRelatedPostsMeta } from '@/data/blog-meta'
+import type { ContentBlock } from '@/data/blog-meta'
 
 /** 渲染内容块 */
 function renderContentBlock(block: ContentBlock, index: number) {
@@ -80,40 +80,66 @@ function renderContentBlock(block: ContentBlock, index: number) {
   }
 }
 
+/** 文章正文加载骨架屏 */
+function ContentSkeleton() {
+  return (
+    <div className="mt-8 animate-pulse space-y-4">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <div className={`h-4 rounded bg-gray-200 ${i % 3 === 0 ? 'w-3/4' : 'w-full'}`} />
+          <div className="h-4 w-5/6 rounded bg-gray-200" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
-  const post = slug ? getBlogPostBySlug(slug) : undefined
-  const relatedPosts = slug ? getRelatedPosts(slug, 3) : []
+  const meta = slug ? getBlogPostMetaBySlug(slug) : undefined
+  const relatedPosts = slug ? getRelatedPostsMeta(slug, 3) : []
+
+  // 文章正文按需加载（从 blog.ts 动态 import）
+  const [content, setContent] = useState<ContentBlock[] | null>(null)
+
+  useEffect(() => {
+    if (!slug) return
+    setContent(null) // 切换文章时重置
+    import('@/data/blog').then(mod => {
+      const post = mod.getBlogPostBySlug(slug)
+      if (post) setContent(post.content)
+    })
+  }, [slug])
 
   // 设置页面标题和 JSON-LD
   useEffect(() => {
-    if (!post) return
+    if (!meta) return
 
-    document.title = `${post.title} - TrainHub 行业洞察`
+    document.title = `${meta.title} - TrainHub 行业洞察`
 
     // JSON-LD: Article schema
     const jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'Article',
-      headline: post.title,
-      description: post.excerpt,
+      headline: meta.title,
+      description: meta.excerpt,
       author: {
         '@type': 'Organization',
-        name: post.author,
+        name: meta.author,
       },
       publisher: {
         '@type': 'Organization',
         name: 'TrainHub',
         url: 'https://withpace.github.io/trainhub/',
       },
-      datePublished: post.publishDate,
-      dateModified: post.publishDate,
+      datePublished: meta.publishDate,
+      dateModified: meta.publishDate,
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `https://withpace.github.io/trainhub/blog/${post.id}`,
+        '@id': `https://withpace.github.io/trainhub/blog/${meta.id}`,
       },
-      articleSection: post.category,
-      keywords: post.tags.join(', '),
+      articleSection: meta.category,
+      keywords: meta.tags.join(', '),
     }
 
     const script = document.createElement('script')
@@ -129,10 +155,10 @@ export default function BlogPostPage() {
       const existing = document.getElementById('blog-post-jsonld')
       if (existing) existing.remove()
     }
-  }, [post])
+  }, [meta])
 
   // 文章未找到
-  if (!post) {
+  if (!meta) {
     return (
       <div className="px-4 py-20 text-center">
         <h2 className="text-xl font-semibold text-gray-900">文章未找到</h2>
@@ -156,7 +182,7 @@ export default function BlogPostPage() {
             行业洞察
           </Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="line-clamp-1 text-gray-900">{post.title}</span>
+          <span className="line-clamp-1 text-gray-900">{meta.title}</span>
         </nav>
       </div>
 
@@ -167,33 +193,33 @@ export default function BlogPostPage() {
           <header>
             {/* 分类标签 */}
             <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
-              {post.category}
+              {meta.category}
             </span>
 
             {/* 标题 */}
             <h1 className="mt-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
-              {post.title}
+              {meta.title}
             </h1>
 
             {/* 元信息栏 */}
             <div className="mt-5 flex flex-wrap items-center gap-4 border-b border-gray-200 pb-6 text-sm text-gray-500">
               <span className="flex items-center gap-1">
                 <User className="h-4 w-4" />
-                {post.author}
+                {meta.author}
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                {post.publishDate}
+                {meta.publishDate}
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {post.readTime}
+                {meta.readTime}
               </span>
             </div>
 
             {/* 标签 */}
             <div className="mt-4 flex flex-wrap gap-2">
-              {post.tags.map(tag => (
+              {meta.tags.map(tag => (
                 <span
                   key={tag}
                   className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
@@ -204,10 +230,14 @@ export default function BlogPostPage() {
             </div>
           </header>
 
-          {/* 文章正文 */}
-          <div className="mt-8">
-            {post.content.map((block, index) => renderContentBlock(block, index))}
-          </div>
+          {/* 文章正文 — 按需加载 */}
+          {content ? (
+            <div className="mt-8">
+              {content.map((block, index) => renderContentBlock(block, index))}
+            </div>
+          ) : (
+            <ContentSkeleton />
+          )}
         </div>
       </article>
 

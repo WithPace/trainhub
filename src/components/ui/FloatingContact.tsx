@@ -9,10 +9,10 @@ export default function FloatingContact() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       {/* 展开的联系方式面板 */}
       {open && (
-        <div className="mb-2 w-72 rounded-xl border border-gray-200 bg-white p-5 shadow-2xl">
+        <div className="mb-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-gray-200 bg-white p-4 shadow-2xl sm:p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-900">
               联系我们
@@ -77,7 +77,7 @@ export default function FloatingContact() {
       {/* 浮动按钮 */}
       <button
         onClick={() => setOpen(!open)}
-        className={`flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all ${
+        className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all sm:h-14 sm:w-14 ${
           open
             ? 'bg-gray-600 hover:bg-gray-700'
             : 'bg-blue-600 hover:bg-blue-700'

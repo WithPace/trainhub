@@ -6,7 +6,7 @@ import { usePageTracking } from '@/hooks/usePageTracking'
 // HomePage 同步加载 — 首屏 LCP 关键路径
 import HomePage from '@/pages/HomePage'
 
-// 其余页面按路由懒加载，blog 数据（2135行）随 BlogPage chunk 分离
+// 其余页面按路由懒加载，blog 内容由 BlogPostPage 按需动态加载
 const TrainersPage = lazy(() => import('@/pages/TrainersPage'))
 const TrainerDetailPage = lazy(() => import('@/pages/TrainerDetailPage'))
 const CoursesPage = lazy(() => import('@/pages/CoursesPage'))

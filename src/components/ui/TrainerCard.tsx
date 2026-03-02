@@ -15,7 +15,7 @@ export default function TrainerCard({ trainer }: TrainerCardProps) {
       to={`/trainers/${trainer.id}`}
       className="group block overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
     >
-      <div className="p-6">
+      <div className="p-4 sm:p-5 md:p-6">
         {/* 头部：头像 + 基本信息 */}
         <div className="flex items-start gap-4">
           <img

@@ -71,7 +71,7 @@ export default function TrainerDetailPage() {
         <BreadcrumbNav items={breadcrumbs} />
 
         {/* 培训师信息卡片 */}
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-8">
+        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 md:p-8">
           <div className="flex flex-col gap-6 sm:flex-row">
             {/* 头像 */}
             <img
@@ -97,7 +97,7 @@ export default function TrainerDetailPage() {
               </div>
 
               {/* 标签信息 */}
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-gray-500 sm:gap-4 sm:text-sm">
                 <span className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   <span className="font-medium text-gray-900">{trainer.rating}</span>

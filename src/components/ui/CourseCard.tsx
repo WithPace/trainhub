@@ -24,13 +24,13 @@ export default function CourseCard({ course }: CourseCardProps) {
       className="group block overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-lg"
     >
       {/* 分类标签条 */}
-      <div className="border-b border-gray-100 bg-gray-50 px-6 py-3">
+      <div className="border-b border-gray-100 bg-gray-50 px-4 py-2 sm:px-6 sm:py-3">
         {course.category_name && (
           <CategoryBadge name={course.category_name} />
         )}
       </div>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-5 md:p-6">
         {/* 标题 */}
         <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
           {course.title}

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
-import { blogPosts } from '@/data/blog'
+import { blogPostsMeta } from '@/data/blog-meta'
 
 export default function BlogPage() {
   // 设置页面标题和 JSON-LD
@@ -14,8 +14,8 @@ export default function BlogPage() {
       '@type': 'ItemList',
       name: '行业洞察 - TrainHub',
       description: '企业培训行业的最新趋势、最佳实践和深度分析',
-      numberOfItems: blogPosts.length,
-      itemListElement: blogPosts.map((post, index) => ({
+      numberOfItems: blogPostsMeta.length,
+      itemListElement: blogPostsMeta.map((post, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         url: `https://withpace.github.io/trainhub/blog/${post.id}`,
@@ -51,7 +51,7 @@ export default function BlogPage() {
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {blogPosts.map(post => (
+            {blogPostsMeta.map(post => (
               <article
                 key={post.id}
                 className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:border-blue-300 hover:shadow-lg"

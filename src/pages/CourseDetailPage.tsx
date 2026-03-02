@@ -137,7 +137,7 @@ export default function CourseDetailPage() {
 
           {/* 右侧：课程信息卡片 */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-gray-200 bg-white p-6">
+            <div className="sticky top-20 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 lg:top-24">
               {/* 价格 */}
               <div className="text-center">
                 <span className="text-3xl font-bold text-blue-600">

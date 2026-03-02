@@ -1,24 +1,8 @@
-// 博客文章数据
+// 博客文章完整数据（含正文内容）
+// 元数据定义在 blog-meta.ts 中，本文件仅由文章详情页按需加载
 
-/** 内容块类型 */
-export interface ContentBlock {
-  type: 'paragraph' | 'heading2' | 'heading3' | 'list' | 'quote' | 'table'
-  text: string // 对于 list 类型，用 \n 分隔各项
-}
-
-/** 博客文章类型 */
-export interface BlogPost {
-  id: string           // URL slug
-  title: string
-  excerpt: string      // 摘要，100-150字
-  content: ContentBlock[] // 完整文章内容
-  author: string
-  publishDate: string  // YYYY-MM-DD
-  category: string     // 分类标签
-  tags: string[]
-  readTime: string     // 如 "8分钟"
-  coverImage?: string
-}
+import type { ContentBlock, BlogPost } from '@/data/blog-meta'
+export type { ContentBlock, BlogPost }
 
 /** 所有博客文章 */
 export const blogPosts: BlogPost[] = [
@@ -3578,25 +3562,4 @@ export const blogPosts: BlogPost[] = [
 /** 根据 slug 获取文章 */
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find(post => post.id === slug)
-}
-
-/** 获取相关文章（同分类，排除当前文章） */
-export function getRelatedPosts(currentSlug: string, limit = 3): BlogPost[] {
-  const current = getBlogPostBySlug(currentSlug)
-  if (!current) return blogPosts.slice(0, limit)
-
-  const sameCategoryPosts = blogPosts.filter(
-    post => post.id !== currentSlug && post.category === current.category
-  )
-
-  // 同分类不够时补充其他文章
-  if (sameCategoryPosts.length >= limit) {
-    return sameCategoryPosts.slice(0, limit)
-  }
-
-  const otherPosts = blogPosts.filter(
-    post => post.id !== currentSlug && post.category !== current.category
-  )
-
-  return [...sameCategoryPosts, ...otherPosts].slice(0, limit)
 }
