@@ -39,7 +39,7 @@ const routes = [
   '/topics/hr',
   '/topics/finance',
   '/topics/communication',
-  // 博客文章 (29)
+  // 博客文章 (35)
   '/blog/enterprise-training-industry-disruption',
   '/blog/how-to-choose-ai-training-course',
   '/blog/leadership-training-trends-2026',
@@ -72,6 +72,9 @@ const routes = [
   '/blog/education-industry-training-program',
   '/blog/trainer-evaluation-form-template',
   '/blog/logistics-industry-training-program',
+  '/blog/energy-industry-training-program',
+  '/blog/training-effectiveness-tracking-template',
+  '/blog/catering-industry-training-program',
 ]
 
 /** 简易静态文件服务器 */
