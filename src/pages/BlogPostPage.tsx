@@ -4,6 +4,23 @@ import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight } from 'luci
 import { getBlogPostMetaBySlug, getRelatedPostsMeta } from '@/data/blog-meta'
 import type { ContentBlock } from '@/data/blog-meta'
 
+/** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
+function renderTextWithLinks(text: string): React.ReactNode {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+  if (parts.length === 1) return text
+  return parts.map((part, i) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (match) {
+      const [, linkText, url] = match
+      if (url.startsWith('/')) {
+        return <Link key={i} to={url} className="text-blue-600 hover:underline">{linkText}</Link>
+      }
+      return <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{linkText}</a>
+    }
+    return part
+  })
+}
+
 /** 渲染内容块 */
 function renderContentBlock(block: ContentBlock, index: number) {
   switch (block.type) {
@@ -22,7 +39,7 @@ function renderContentBlock(block: ContentBlock, index: number) {
     case 'paragraph':
       return (
         <p key={index} className="mb-5 leading-relaxed text-gray-700">
-          {block.text}
+          {renderTextWithLinks(block.text)}
         </p>
       )
     case 'list':
@@ -30,7 +47,7 @@ function renderContentBlock(block: ContentBlock, index: number) {
         <ul key={index} className="mb-5 space-y-2 pl-5">
           {block.text.split('\n').map((item, i) => (
             <li key={i} className="list-disc leading-relaxed text-gray-700">
-              {item}
+              {renderTextWithLinks(item)}
             </li>
           ))}
         </ul>
@@ -41,7 +58,7 @@ function renderContentBlock(block: ContentBlock, index: number) {
           key={index}
           className="mb-5 border-l-4 border-blue-500 bg-blue-50 py-3 pl-4 pr-4 italic text-gray-700"
         >
-          {block.text}
+          {renderTextWithLinks(block.text)}
         </blockquote>
       )
     case 'table': {

@@ -32,7 +32,7 @@ const post: BlogPost = {
     },
     {
       "type": "paragraph",
-      "text": "正确的第一步是：找CEO或业务VP，搞清楚明年公司最重要的3-5个业务目标是什么。然后反推：实现这些目标，组织能力上最大的缺口在哪里？这些缺口中，哪些可以通过培训来弥补？"
+      "text": "正确的第一步是：找CEO或业务VP，搞清楚明年公司最重要的3-5个业务目标是什么。然后反推：实现这些目标，组织能力上最大的缺口在哪里？这些缺口中，哪些可以通过培训来弥补？具体的需求分析方法可参考[企业培训需求分析方法](/blog/training-needs-analysis-methods)。"
     },
     {
       "type": "list",
@@ -112,7 +112,7 @@ const post: BlogPost = {
     },
     {
       "type": "paragraph",
-      "text": "年度计划里如果没有评估方案，年底就只能靠\"感觉\"来总结。建议每个培训项目在设计时就明确评估方式："
+      "text": "年度计划里如果没有评估方案，年底就只能靠\"感觉\"来总结。建议每个培训项目在设计时就明确评估方式——关于完整的评估方法论，推荐阅读[企业培训效果评估最佳实践](/blog/training-effectiveness-evaluation)和[企业培训ROI怎么算](/blog/training-roi-measurement)："
     },
     {
       "type": "table",
