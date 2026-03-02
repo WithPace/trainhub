@@ -53,6 +53,8 @@ const routes = [
   '/blog/annual-training-plan-design',
   '/blog/online-vs-offline-training',
   '/blog/training-effectiveness-evaluation',
+  '/blog/how-to-choose-training-provider',
+  '/blog/new-employee-onboarding-training-guide',
 ]
 
 /** 简易静态文件服务器 */
