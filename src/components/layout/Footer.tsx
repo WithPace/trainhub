@@ -1,10 +1,20 @@
+import { Link } from 'react-router-dom'
 import { GraduationCap } from 'lucide-react'
+
+const topicLinks = [
+  { name: '领导力培训', slug: 'leadership' },
+  { name: '销售技巧培训', slug: 'sales' },
+  { name: '数字化转型培训', slug: 'digital' },
+  { name: '人力资源培训', slug: 'hr' },
+  { name: '财务管理培训', slug: 'finance' },
+  { name: '沟通表达培训', slug: 'communication' },
+]
 
 export default function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* 品牌信息 */}
           <div>
             <div className="flex items-center gap-2">
@@ -22,20 +32,34 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-900">快速链接</h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <a href="/trainers" className="text-sm text-gray-500 hover:text-blue-600">
+                <Link to="/trainers" className="text-sm text-gray-500 hover:text-blue-600">
                   浏览培训师
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/courses" className="text-sm text-gray-500 hover:text-blue-600">
+                <Link to="/courses" className="text-sm text-gray-500 hover:text-blue-600">
                   浏览课程
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/about" className="text-sm text-gray-500 hover:text-blue-600">
+                <Link to="/about" className="text-sm text-gray-500 hover:text-blue-600">
                   关于我们
-                </a>
+                </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* 培训领域 */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">培训领域</h3>
+            <ul className="mt-3 space-y-2">
+              {topicLinks.map(link => (
+                <li key={link.slug}>
+                  <Link to={`/topics/${link.slug}`} className="text-sm text-gray-500 hover:text-blue-600">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

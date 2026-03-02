@@ -74,7 +74,7 @@ export default function HomePage() {
             {(categories ?? []).map(cat => (
               <Link
                 key={cat.id}
-                to={`/courses?category=${cat.slug}`}
+                to={`/topics/${cat.slug}`}
                 className="group rounded-xl border border-gray-200 p-6 text-center transition-all hover:border-blue-300 hover:shadow-md"
               >
                 <span className="text-4xl">{cat.icon}</span>

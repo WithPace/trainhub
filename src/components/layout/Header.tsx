@@ -7,6 +7,7 @@ const navItems = [
   { label: '首页', path: '/' },
   { label: '培训师', path: '/trainers' },
   { label: '课程', path: '/courses' },
+  { label: '行业洞察', path: '/blog' },
   { label: '培训师入驻', path: '/join' },
   { label: '关于我们', path: '/about' },
 ]
@@ -14,6 +15,12 @@ const navItems = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
+
+  // 判断导航项是否激活（首页精确匹配，其他前缀匹配）
+  const isActive = (path: string) =>
+    path === '/'
+      ? location.pathname === '/'
+      : location.pathname === path || location.pathname.startsWith(path + '/')
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
@@ -32,7 +39,7 @@ export default function Header() {
               to={item.path}
               className={cn(
                 'text-sm font-medium transition-colors hover:text-blue-600',
-                location.pathname === item.path
+                isActive(item.path)
                   ? 'text-blue-600'
                   : 'text-gray-600'
               )}
@@ -74,7 +81,7 @@ export default function Header() {
                 to={item.path}
                 className={cn(
                   'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  location.pathname === item.path
+                  isActive(item.path)
                     ? 'bg-blue-50 text-blue-600'
                     : 'text-gray-600 hover:bg-gray-50'
                 )}

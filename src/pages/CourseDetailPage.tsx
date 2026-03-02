@@ -1,10 +1,17 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Clock, Users, DollarSign, ArrowLeft, CheckCircle } from 'lucide-react'
+import { Clock, Users, DollarSign, CheckCircle } from 'lucide-react'
 import { getCourseById as fetchCourse, getTrainerById as fetchTrainer } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import CategoryBadge from '@/components/ui/CategoryBadge'
 import InquiryModal from '@/components/ui/InquiryModal'
+import {
+  JsonLd,
+  BreadcrumbNav,
+  buildCourseSchema,
+  buildBreadcrumbSchema,
+  courseBreadcrumbs,
+} from '@/components/seo/JsonLd'
 
 // 价格区间格式化
 function formatPriceRange(range: string): string {
@@ -50,17 +57,17 @@ export default function CourseDetailPage() {
     )
   }
 
+  const breadcrumbs = courseBreadcrumbs(course.title)
+
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      {/* 结构化数据 */}
+      <JsonLd data={buildCourseSchema(course, trainer)} />
+      <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
+
       <div className="mx-auto max-w-5xl">
-        {/* 返回链接 */}
-        <Link
-          to="/courses"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          返回课程列表
-        </Link>
+        {/* 面包屑导航 */}
+        <BreadcrumbNav items={breadcrumbs} />
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* 左侧：课程详情 */}

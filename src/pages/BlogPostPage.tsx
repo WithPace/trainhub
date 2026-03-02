@@ -1,0 +1,285 @@
+import { useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react'
+import { getBlogPostBySlug, getRelatedPosts } from '@/data/blog'
+import type { ContentBlock } from '@/data/blog'
+
+/** 渲染内容块 */
+function renderContentBlock(block: ContentBlock, index: number) {
+  switch (block.type) {
+    case 'heading2':
+      return (
+        <h2 key={index} className="mt-10 mb-4 text-xl font-bold text-gray-900 sm:text-2xl">
+          {block.text}
+        </h2>
+      )
+    case 'heading3':
+      return (
+        <h3 key={index} className="mt-8 mb-3 text-lg font-semibold text-gray-900">
+          {block.text}
+        </h3>
+      )
+    case 'paragraph':
+      return (
+        <p key={index} className="mb-5 leading-relaxed text-gray-700">
+          {block.text}
+        </p>
+      )
+    case 'list':
+      return (
+        <ul key={index} className="mb-5 space-y-2 pl-5">
+          {block.text.split('\n').map((item, i) => (
+            <li key={i} className="list-disc leading-relaxed text-gray-700">
+              {item}
+            </li>
+          ))}
+        </ul>
+      )
+    case 'quote':
+      return (
+        <blockquote
+          key={index}
+          className="mb-5 border-l-4 border-blue-500 bg-blue-50 py-3 pl-4 pr-4 italic text-gray-700"
+        >
+          {block.text}
+        </blockquote>
+      )
+    case 'table': {
+      const rows = block.text.split('\n')
+      const headers = rows[0]?.split('|') ?? []
+      const dataRows = rows.slice(1)
+      return (
+        <div key={index} className="mb-5 overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b-2 border-gray-200 bg-gray-50">
+                {headers.map((header, i) => (
+                  <th key={i} className="px-4 py-3 text-left font-semibold text-gray-900">
+                    {header.trim()}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {dataRows.map((row, rowIndex) => (
+                <tr key={rowIndex} className="border-b border-gray-100">
+                  {row.split('|').map((cell, cellIndex) => (
+                    <td key={cellIndex} className="px-4 py-3 text-gray-700">
+                      {cell.trim()}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+    default:
+      return null
+  }
+}
+
+export default function BlogPostPage() {
+  const { slug } = useParams<{ slug: string }>()
+  const post = slug ? getBlogPostBySlug(slug) : undefined
+  const relatedPosts = slug ? getRelatedPosts(slug, 3) : []
+
+  // 设置页面标题和 JSON-LD
+  useEffect(() => {
+    if (!post) return
+
+    document.title = `${post.title} - TrainHub 行业洞察`
+
+    // JSON-LD: Article schema
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.excerpt,
+      author: {
+        '@type': 'Organization',
+        name: post.author,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'TrainHub',
+        url: 'https://withpace.github.io/trainhub/',
+      },
+      datePublished: post.publishDate,
+      dateModified: post.publishDate,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://withpace.github.io/trainhub/blog/${post.id}`,
+      },
+      articleSection: post.category,
+      keywords: post.tags.join(', '),
+    }
+
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.textContent = JSON.stringify(jsonLd)
+    script.id = 'blog-post-jsonld'
+    document.head.appendChild(script)
+
+    // 滚动到页面顶部
+    window.scrollTo(0, 0)
+
+    return () => {
+      const existing = document.getElementById('blog-post-jsonld')
+      if (existing) existing.remove()
+    }
+  }, [post])
+
+  // 文章未找到
+  if (!post) {
+    return (
+      <div className="px-4 py-20 text-center">
+        <h2 className="text-xl font-semibold text-gray-900">文章未找到</h2>
+        <Link to="/blog" className="mt-4 inline-block text-blue-600 hover:underline">
+          返回行业洞察
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {/* 面包屑导航 */}
+      <div className="border-b border-gray-200 bg-gray-50 px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto flex max-w-4xl items-center gap-2 py-3 text-sm text-gray-500">
+          <Link to="/" className="hover:text-blue-600">
+            首页
+          </Link>
+          <ChevronRight className="h-3 w-3" />
+          <Link to="/blog" className="hover:text-blue-600">
+            行业洞察
+          </Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="line-clamp-1 text-gray-900">{post.title}</span>
+        </nav>
+      </div>
+
+      {/* 文章内容 */}
+      <article className="px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          {/* 文章头部 */}
+          <header>
+            {/* 分类标签 */}
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
+              {post.category}
+            </span>
+
+            {/* 标题 */}
+            <h1 className="mt-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
+              {post.title}
+            </h1>
+
+            {/* 元信息栏 */}
+            <div className="mt-5 flex flex-wrap items-center gap-4 border-b border-gray-200 pb-6 text-sm text-gray-500">
+              <span className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                {post.author}
+              </span>
+              <span className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                {post.publishDate}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-4 w-4" />
+                {post.readTime}
+              </span>
+            </div>
+
+            {/* 标签 */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {post.tags.map(tag => (
+                <span
+                  key={tag}
+                  className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </header>
+
+          {/* 文章正文 */}
+          <div className="mt-8">
+            {post.content.map((block, index) => renderContentBlock(block, index))}
+          </div>
+        </div>
+      </article>
+
+      {/* 相关文章推荐 */}
+      {relatedPosts.length > 0 && (
+        <section className="border-t border-gray-200 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="text-xl font-bold text-gray-900">推荐阅读</h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {relatedPosts.map(related => (
+                <Link
+                  key={related.id}
+                  to={`/blog/${related.id}`}
+                  className="group rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-blue-300 hover:shadow-md"
+                >
+                  <span className="text-xs font-medium text-blue-600">
+                    {related.category}
+                  </span>
+                  <h3 className="mt-2 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+                    {related.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-gray-500">
+                    {related.excerpt}
+                  </p>
+                  <span className="mt-3 flex items-center gap-1 text-xs font-medium text-blue-600">
+                    阅读全文 <ArrowRight className="h-3 w-3" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 底部 CTA */}
+      <section className="bg-blue-600 px-4 py-12 text-center text-white sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl">
+          <h2 className="text-xl font-bold sm:text-2xl">
+            找到最适合企业的培训师和课程
+          </h2>
+          <p className="mt-3 text-blue-100">
+            TrainHub 上的每一位培训师都经过严格筛选，信息真实透明
+          </p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              to="/trainers"
+              className="rounded-lg bg-white px-6 py-3 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+            >
+              浏览培训师
+            </Link>
+            <Link
+              to="/courses"
+              className="rounded-lg border border-white/30 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
+            >
+              浏览课程
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 返回按钮 */}
+      <div className="border-t border-gray-200 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            返回行业洞察
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}

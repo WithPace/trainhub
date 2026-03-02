@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Star, MapPin, Briefcase, Mail, ArrowLeft } from 'lucide-react'
+import { Star, MapPin, Briefcase, Mail } from 'lucide-react'
 import { getTrainerById as fetchTrainer } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import { getAvatarUrl } from '@/lib/utils'
 import CourseCard from '@/components/ui/CourseCard'
 import InquiryModal from '@/components/ui/InquiryModal'
+import {
+  JsonLd,
+  BreadcrumbNav,
+  buildPersonSchema,
+  buildBreadcrumbSchema,
+  trainerBreadcrumbs,
+} from '@/components/seo/JsonLd'
 
 export default function TrainerDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -38,18 +45,17 @@ export default function TrainerDetailPage() {
 
   const trainerCourses = trainer.courses ?? []
   const avatarSrc = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
+  const breadcrumbs = trainerBreadcrumbs(trainer.name)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
+      {/* 结构化数据 */}
+      <JsonLd data={buildPersonSchema(trainer)} />
+      <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
+
       <div className="mx-auto max-w-5xl">
-        {/* 返回链接 */}
-        <Link
-          to="/trainers"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          返回培训师列表
-        </Link>
+        {/* 面包屑导航 */}
+        <BreadcrumbNav items={breadcrumbs} />
 
         {/* 培训师信息卡片 */}
         <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-8">
