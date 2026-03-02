@@ -81,6 +81,9 @@ const routes = [
   '/blog/china-training-market-trends-2026',
   '/blog/training-contract-agreement-template',
   '/blog/high-potential-talent-development-program',
+  '/blog/top-training-course-directions-2026',
+  '/blog/trainer-personal-brand-building-guide',
+  '/blog/training-supplier-management-strategy',
 ]
 
 /** 简易静态文件服务器 */
