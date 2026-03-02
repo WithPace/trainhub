@@ -75,6 +75,29 @@ export const reviews: Review[] = [
   // 吴晓燕 (id: 10) — 补充
   { id: 37, trainer_id: 10, course_id: 12, author: '夏HR', company: '某律师事务所', role: 'HR总监', rating: 5, content: '律师行业压力大、加班多，吴老师的情绪管理课帮大家建立了自我觉察的习惯。培训后员工满意度调查提升了15个百分点。', date: '2026-02-25' },
   { id: 38, trainer_id: 10, course_id: 12, author: '田主管', company: '某医院', role: '护理部主管', rating: 5, content: '医护人员的情绪管理太重要了。吴老师的正念练习简单易学，现在科室每天交班前都会做3分钟呼吸练习。', date: '2026-01-10' },
+
+  // ── 第三批评价：新增培训师 ──
+
+  // 黄志豪 (id: 11)
+  { id: 39, trainer_id: 11, course_id: 13, author: '罗VP', company: '某央企制造集团', role: '战略发展VP', rating: 5, content: '集团并购后整合困难重重，黄老师的变革管理方法论帮我们理清了利益相关者地图，制定了分阶段推进方案。半年内组织融合度提升了60%。', date: '2026-02-18' },
+  { id: 40, trainer_id: 11, course_id: 13, author: '苏HRD', company: '某零售连锁企业', role: 'HRD', rating: 4, content: '数字化转型导致组织变革阻力很大，黄老师教的"变革沟通三步法"非常管用。员工从抵触变成了主动参与。', date: '2026-01-22' },
+
+  // 程雪梅 (id: 12)
+  { id: 41, trainer_id: 12, course_id: 14, author: '高总监', company: '某德资汽车零部件公司', role: '中国区运营总监', rating: 5, content: '程老师的跨文化沟通课帮我们中方团队理解了德国总部的决策逻辑。以前经常因为邮件风格产生误解，现在沟通效率大幅提升。', date: '2026-02-10' },
+  { id: 42, trainer_id: 12, course_id: 14, author: '叶经理', company: '某出海电商公司', role: '海外市场经理', rating: 5, content: '公司拓展东南亚市场，程老师专门针对中国-东南亚文化差异做了定制课程。团队在跨文化谈判中的表现明显提升。', date: '2026-01-28' },
+
+  // 马俊杰 (id: 13)
+  { id: 43, trainer_id: 13, course_id: 15, author: '董厂长', company: '某家电制造公司', role: '工厂厂长', rating: 5, content: '马老师的精益管理课非常落地，不是纸上谈兵。价值流图分析当场就帮我们找出了三个关键浪费点，预计年节省成本200万。', date: '2026-02-20' },
+  { id: 44, trainer_id: 13, course_id: 15, author: '严总监', company: '某食品加工企业', role: '供应链总监', rating: 4, content: '库存优化的部分对我们帮助最大，用马老师教的ABC分析法和安全库存模型，库存周转率提升了30%。', date: '2026-01-15' },
+
+  // 杨芳 (id: 14)
+  { id: 45, trainer_id: 14, course_id: 16, author: '任总监', company: '某美妆品牌', role: '市场总监', rating: 5, content: '杨老师的新媒体课太实战了，当天下午就带着团队拍了第一条短视频。一个月后抖音账号粉丝从0涨到5万，带来了实实在在的销售转化。', date: '2026-02-25' },
+  { id: 46, trainer_id: 14, course_id: 16, author: '贺经理', company: '某连锁餐饮品牌', role: '品牌经理', rating: 5, content: '私域流量体系搭建的部分是最大收获。按杨老师的方法建了企业微信社群，三个月沉淀了2万精准用户，复购率翻倍。', date: '2026-02-08' },
+  { id: 47, trainer_id: 14, course_id: 16, author: '石主管', company: '某教育培训机构', role: '新媒体主管', rating: 4, content: '杨老师对抖音算法的理解非常深，教的"3秒钩子"技巧让我们的视频完播率从15%提升到45%。课程节奏紧凑，干货满满。', date: '2026-01-05' },
+
+  // 许文博 (id: 15)
+  { id: 48, trainer_id: 15, course_id: 17, author: '卢CEO', company: '某科技创业公司', role: 'CEO', rating: 5, content: '许老师的教练式领导力课改变了我的管理方式。以前什么都亲力亲为，现在学会了用提问代替指令，团队反而更有主动性了。', date: '2026-02-15' },
+  { id: 49, trainer_id: 15, course_id: 17, author: '段VP', company: '某上市地产公司', role: '人力资源VP', rating: 5, content: 'GROW教练对话模型特别实用，我们把它融入了季度绩效面谈流程。高管反馈"终于知道怎么跟下属谈发展了"。', date: '2026-01-20' },
 ]
 
 // 根据培训师 ID 获取评价

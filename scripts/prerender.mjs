@@ -26,10 +26,10 @@ const routes = [
   '/blog',
   '/join',
   '/about',
-  // 培训师详情 (10)
-  ...Array.from({ length: 10 }, (_, i) => `/trainers/${i + 1}`),
-  // 课程详情 (12)
-  ...Array.from({ length: 12 }, (_, i) => `/courses/${i + 1}`),
+  // 培训师详情 (15)
+  ...Array.from({ length: 15 }, (_, i) => `/trainers/${i + 1}`),
+  // 课程详情 (17)
+  ...Array.from({ length: 17 }, (_, i) => `/courses/${i + 1}`),
   // 分类专题 (6)
   '/topics/leadership',
   '/topics/sales',
@@ -37,11 +37,15 @@ const routes = [
   '/topics/hr',
   '/topics/finance',
   '/topics/communication',
-  // 博客文章 (4)
+  // 博客文章 (8)
   '/blog/enterprise-training-industry-disruption',
   '/blog/how-to-choose-ai-training-course',
   '/blog/leadership-training-trends-2026',
   '/blog/how-to-evaluate-trainer-quality',
+  '/blog/training-roi-measurement',
+  '/blog/freelance-trainer-pricing-guide',
+  '/blog/new-manager-first-90-days',
+  '/blog/enterprise-training-budget-planning-2026',
 ]
 
 /** 简易静态文件服务器 */
