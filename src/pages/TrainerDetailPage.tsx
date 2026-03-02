@@ -10,6 +10,8 @@ import InquiryModal from '@/components/ui/InquiryModal'
 import ReviewSection from '@/components/ui/ReviewSection'
 import ShareButtons from '@/components/ui/ShareButtons'
 import { getReviewsByTrainerId } from '@/data/reviews'
+import { getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
+import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
 import PageHead from '@/components/seo/PageHead'
 import {
   JsonLd,
@@ -60,6 +62,9 @@ export default function TrainerDetailPage() {
   const avatarSrc = trainer.avatar_url || getAvatarUrl(trainer.name, trainer.id)
   const breadcrumbs = trainerBreadcrumbs(trainer.name)
   const trainerReviews = getReviewsByTrainerId(trainer.id)
+
+  // 根据培训师专长匹配相关博客文章
+  const relatedBlogPosts = getRelatedBlogPostsByKeywords(trainer.specialties, 3)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -165,6 +170,11 @@ export default function TrainerDetailPage() {
 
         {/* 学员评价 */}
         <ReviewSection reviews={trainerReviews} />
+
+        {/* 相关博客文章 */}
+        {relatedBlogPosts.length > 0 && (
+          <RelatedBlogSection posts={relatedBlogPosts} title="相关培训干货" />
+        )}
       </div>
 
       {/* 同领域培训师推荐 */}

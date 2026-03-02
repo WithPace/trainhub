@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Clock, Users, DollarSign, CheckCircle } from 'lucide-react'
 import { getCourseById as fetchCourse, getTrainerById as fetchTrainer, getRelatedCourses } from '@/services/api'
+import { getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
+import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
 import { useQuery } from '@/hooks/useQuery'
 import CategoryBadge from '@/components/ui/CategoryBadge'
 import CourseCard from '@/components/ui/CourseCard'
@@ -72,6 +74,10 @@ export default function CourseDetailPage() {
 
   const breadcrumbs = courseBreadcrumbs(course.title)
   const courseReviews = getReviewsByCourseId(course.id)
+
+  // 根据课程分类和标题关键词匹配相关博客文章
+  const blogKeywords = [course.category_name, course.title.split(/[：:—–\s]+/)[0]].filter(Boolean) as string[]
+  const relatedBlogPosts = getRelatedBlogPostsByKeywords(blogKeywords, 3)
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -208,6 +214,13 @@ export default function CourseDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* 相关博客文章 */}
+      {relatedBlogPosts.length > 0 && (
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <RelatedBlogSection posts={relatedBlogPosts} title="相关培训干货" />
+        </div>
+      )}
 
       {/* 相关课程推荐 */}
       {relatedCourses && relatedCourses.length > 0 && (

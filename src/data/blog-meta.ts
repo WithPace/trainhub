@@ -573,6 +573,37 @@ export function getBlogPostMetaBySlug(slug: string): BlogPostMeta | undefined {
   return blogPostsMeta.find(post => post.id === slug)
 }
 
+/** 根据关键词获取相关博客文章（用于课程/培训师详情页交叉引流） */
+export function getRelatedBlogPostsByKeywords(keywords: string[], limit = 3): BlogPostMeta[] {
+  if (!keywords.length) return []
+
+  // 对每篇文章计算关键词匹配得分
+  const scored = blogPostsMeta.map(post => {
+    let score = 0
+    const lowerTags = post.tags.map(t => t.toLowerCase())
+    const lowerCategory = post.category.toLowerCase()
+
+    for (const kw of keywords) {
+      const lowerKw = kw.toLowerCase()
+      // 标签精确匹配 +3
+      if (lowerTags.includes(lowerKw)) score += 3
+      // 标签部分匹配 +2
+      else if (lowerTags.some(t => t.includes(lowerKw) || lowerKw.includes(t))) score += 2
+      // 分类匹配 +2
+      if (lowerCategory.includes(lowerKw) || lowerKw.includes(lowerCategory)) score += 2
+      // 标题包含关键词 +1
+      if (post.title.toLowerCase().includes(lowerKw)) score += 1
+    }
+    return { post, score }
+  })
+
+  return scored
+    .filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(s => s.post)
+}
+
 /** 获取相关文章元数据（同分类，排除当前文章） */
 export function getRelatedPostsMeta(currentSlug: string, limit = 3): BlogPostMeta[] {
   const current = getBlogPostMetaBySlug(currentSlug)
