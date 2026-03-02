@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { CheckCircle, Star, TrendingUp, Users } from 'lucide-react'
+import { CheckCircle, Star, TrendingUp, Users, Shield, Award } from 'lucide-react'
+import { trainers } from '@/data/mock'
+import { getAvatarUrl } from '@/lib/utils'
 
 interface TrainerApplication {
   name: string
@@ -149,6 +151,74 @@ export default function JoinPage() {
               <p className="mt-1 text-sm text-gray-500">{item.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* 平台数据 + 已入驻培训师 */}
+      <section className="border-b border-gray-200 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          {/* 数据亮点 */}
+          <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { num: '10+', label: '认证培训师' },
+              { num: '12', label: '精品课程' },
+              { num: '1,200+', label: '累计学员评价' },
+              { num: '6', label: '培训领域' },
+            ].map(item => (
+              <div key={item.label} className="text-center">
+                <p className="text-2xl font-bold text-emerald-600">{item.num}</p>
+                <p className="mt-1 text-sm text-gray-500">{item.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* 已入驻培训师头像墙 */}
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-gray-900">他们已经入驻 TrainHub</h3>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+              {trainers.filter(t => t.featured).map(t => (
+                <div key={t.id} className="flex flex-col items-center gap-1">
+                  <img
+                    src={t.avatar_url || getAvatarUrl(t.name, t.id)}
+                    alt={t.name}
+                    className="h-12 w-12 rounded-full border-2 border-white shadow-sm"
+                  />
+                  <span className="text-xs text-gray-600">{t.name}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-sm text-gray-500">
+              平均 14 年培训经验 · 覆盖 6 大城市 · 评分均在 4.7 以上
+            </p>
+          </div>
+
+          {/* 培训师推荐语 */}
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-lg bg-white p-4 shadow-sm">
+              <p className="text-sm text-gray-600 italic">
+                "入驻 TrainHub 后，每月能收到 3-5 个精准的企业咨询，比自己在朋友圈发广告有效多了。"
+              </p>
+              <div className="mt-3 flex items-center gap-2">
+                <img src={getAvatarUrl('张明远', 1)} alt="张明远" className="h-8 w-8 rounded-full" />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">张明远</p>
+                  <p className="text-xs text-gray-500">领导力发展专家 · 20年经验</p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-lg bg-white p-4 shadow-sm">
+              <p className="text-sm text-gray-600 italic">
+                "平台的个人主页比我自己做的网站还专业，课程大纲展示得很清晰，企业客户看了就知道我能做什么。"
+              </p>
+              <div className="mt-3 flex items-center gap-2">
+                <img src={getAvatarUrl('林小芳', 8)} alt="林小芳" className="h-8 w-8 rounded-full" />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">林小芳</p>
+                  <p className="text-xs text-gray-500">AI应用培训专家 · 8年经验</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

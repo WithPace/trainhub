@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from '@/components/layout/Layout'
+import FloatingContact from '@/components/ui/FloatingContact'
 import { usePageTracking } from '@/hooks/usePageTracking'
 import HomePage from '@/pages/HomePage'
 import TrainersPage from '@/pages/TrainersPage'
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/join" element={<JoinPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
+      <FloatingContact />
     </Layout>
   )
 }
