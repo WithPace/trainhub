@@ -5,6 +5,7 @@ import TrainersPage from '@/pages/TrainersPage'
 import TrainerDetailPage from '@/pages/TrainerDetailPage'
 import CoursesPage from '@/pages/CoursesPage'
 import CourseDetailPage from '@/pages/CourseDetailPage'
+import JoinPage from '@/pages/JoinPage'
 import AboutPage from '@/pages/AboutPage'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/trainers/:id" element={<TrainerDetailPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
+        <Route path="/join" element={<JoinPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </Layout>

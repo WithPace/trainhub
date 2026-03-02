@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Target, Shield, Handshake, Lightbulb } from 'lucide-react'
 
 export default function AboutPage() {
@@ -85,7 +86,9 @@ export default function AboutPage() {
             </div>
             <div className="rounded-xl border border-gray-200 p-6">
               <p className="text-sm text-gray-500">培训师入驻</p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">join@trainhub.cn</p>
+              <Link to="/join" className="mt-1 block text-lg font-semibold text-emerald-600 hover:text-emerald-700">
+                在线申请入驻 &rarr;
+              </Link>
             </div>
           </div>
           <p className="mt-6 text-sm text-gray-400">

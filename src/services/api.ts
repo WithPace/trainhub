@@ -155,9 +155,23 @@ export async function submitInquiry(
     return { id: Date.now(), message: '咨询已提交，我们会尽快联系您' }
   }
 
-  // 兜底：mock 模式
-  console.log('[mock] Inquiry submitted:', inquiry)
-  return { id: Date.now(), message: '咨询已提交（演示模式）' }
+  // 兜底：保存到 localStorage + 打开 mailto:
+  const submissions = JSON.parse(localStorage.getItem('trainhub_inquiries') || '[]')
+  submissions.push({ ...inquiry, submitted_at: new Date().toISOString() })
+  localStorage.setItem('trainhub_inquiries', JSON.stringify(submissions))
+
+  // 构建 mailto: 链接
+  const subject = encodeURIComponent(`TrainHub 培训咨询 — ${inquiry.company_name}`)
+  const body = encodeURIComponent(
+    `企业培训咨询\n\n` +
+    `公司：${inquiry.company_name}\n` +
+    `联系人：${inquiry.contact_name}\n` +
+    `电话：${inquiry.contact_phone}\n` +
+    `需求：${inquiry.message || '（未填写）'}\n`
+  )
+  window.open(`mailto:hi@trainhub.cn?subject=${subject}&body=${body}`, '_blank')
+
+  return { id: Date.now(), message: '咨询已提交，我们会尽快联系您' }
 }
 
 // ─── Utils ───
