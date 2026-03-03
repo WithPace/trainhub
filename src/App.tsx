@@ -20,6 +20,8 @@ const FAQPage = lazy(() => import('@/pages/FAQPage'))
 const MatchPage = lazy(() => import('@/pages/MatchPage'))
 const AboutPage = lazy(() => import('@/pages/AboutPage'))
 const AssessmentPage = lazy(() => import('@/pages/AssessmentPage'))
+const BudgetCalculatorPage = lazy(() => import('@/pages/BudgetCalculatorPage'))
+const ROICalculatorPage = lazy(() => import('@/pages/ROICalculatorPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 /** 页面加载占位 — 轻量 skeleton，避免布局闪烁 */
@@ -51,6 +53,8 @@ export default function App() {
           <Route path="/match" element={<MatchPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/tools/budget-calculator" element={<BudgetCalculatorPage />} />
+          <Route path="/tools/roi-calculator" element={<ROICalculatorPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

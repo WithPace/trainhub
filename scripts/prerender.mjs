@@ -94,6 +94,9 @@ const routes = [
   '/blog/real-estate-industry-training-program',
   '/blog/training-course-development-guide',
   '/blog/cross-department-collaboration-training',
+  // 免费工具 (2)
+  '/tools/budget-calculator',
+  '/tools/roi-calculator',
 ]
 
 /** 简易静态文件服务器 */

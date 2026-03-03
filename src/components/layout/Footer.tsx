@@ -14,7 +14,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* 品牌信息 */}
           <div>
             <div className="flex items-center gap-2">
@@ -80,6 +80,33 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* 免费工具 */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">免费工具</h3>
+            <ul className="mt-3 space-y-2">
+              <li>
+                <Link to="/assessment" className="text-sm text-gray-500 hover:text-blue-600">
+                  培训需求诊断
+                </Link>
+              </li>
+              <li>
+                <Link to="/tools/budget-calculator" className="text-sm text-gray-500 hover:text-blue-600">
+                  培训预算计算器
+                </Link>
+              </li>
+              <li>
+                <Link to="/tools/roi-calculator" className="text-sm text-gray-500 hover:text-blue-600">
+                  培训 ROI 计算器
+                </Link>
+              </li>
+              <li>
+                <Link to="/match" className="text-sm text-gray-500 hover:text-blue-600">
+                  智能匹配培训师
+                </Link>
+              </li>
             </ul>
           </div>
 
