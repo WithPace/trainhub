@@ -134,7 +134,7 @@ export default function TopicPage() {
       const keywords = [category.name, ...topic.relatedKeywords.slice(0, 3)]
       setRelatedPosts(getRelatedBlogPostsByKeywords(keywords, 4))
     })
-  }, [topic?.slug, category?.name])
+  }, [topic, category])
 
   const baseUrl = 'https://withpace.github.io/trainhub/'
 

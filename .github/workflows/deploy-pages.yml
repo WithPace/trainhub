@@ -32,8 +32,10 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Build
-        run: npm run build
+      - name: Release gate
+        run: npm run qa:release
+        env:
+          VITE_FORM_ENDPOINT: ${{ secrets.VITE_FORM_ENDPOINT }}
 
       - name: Prerender routes
         run: node scripts/prerender.mjs

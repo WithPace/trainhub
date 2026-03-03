@@ -13,6 +13,7 @@
     "build:prerender": "tsc -b && vite build && node scripts/prerender.mjs",
     "prerender": "node scripts/prerender.mjs",
     "lint": "eslint .",
+    "qa:release": "bash scripts/release-check.sh",
     "preview": "vite preview",
     "deploy:api": "wrangler deploy",
     "deploy:pages": "bash scripts/deploy-pages.sh"
