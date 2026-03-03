@@ -8,7 +8,7 @@ const DEFAULTS = {
   description:
     'TrainHub 连接企业与顶尖培训师，覆盖领导力、销售、数字化转型等核心领域，一站式解决企业培训需求。',
   url: BASE_URL,
-  image: `${BASE_URL}/og-image.png`,
+  image: `${BASE_URL}/og-image.webp`,
   type: 'website' as const,
 }
 

@@ -6,7 +6,7 @@
  * - 培训师: 绿色渐变背景 + 姓名 + 头衔 + 专长 + 城市/经验
  * - 课程: 紫色渐变背景 + 课程标题 + 分类 + 时长/人数 + 价格
  *
- * 输出: public/og/trainers/{id}.png, public/og/courses/{id}.png
+ * 输出: public/og/trainers/{id}.webp, public/og/courses/{id}.webp
  * 用法: node scripts/generate-page-og-images.mjs
  */
 
@@ -302,7 +302,7 @@ async function main() {
 
   // 生成培训师 og:images
   for (const trainer of trainers) {
-    const outPath = resolve(TRAINER_DIR, `${trainer.id}.png`)
+    const outPath = resolve(TRAINER_DIR, `${trainer.id}.webp`)
     if (existsSync(outPath)) {
       skipped++
       continue
@@ -311,14 +311,14 @@ async function main() {
     const svg = generateTrainerSvg(trainer)
     await sharp(Buffer.from(svg))
       .resize(WIDTH, HEIGHT)
-      .png({ compressionLevel: 6 })
+      .webp({ quality: 85, effort: 6 })
       .toFile(outPath)
     generated++
   }
 
   // 生成课程 og:images
   for (const course of courses) {
-    const outPath = resolve(COURSE_DIR, `${course.id}.png`)
+    const outPath = resolve(COURSE_DIR, `${course.id}.webp`)
     if (existsSync(outPath)) {
       skipped++
       continue
@@ -327,7 +327,7 @@ async function main() {
     const svg = generateCourseSvg(course)
     await sharp(Buffer.from(svg))
       .resize(WIDTH, HEIGHT)
-      .png({ compressionLevel: 6 })
+      .webp({ quality: 85, effort: 6 })
       .toFile(outPath)
     generated++
   }

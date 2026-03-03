@@ -247,7 +247,7 @@ export default function BlogPostPage() {
       description: meta.excerpt,
       image: {
         '@type': 'ImageObject',
-        url: `https://withpace.github.io/trainhub/og/blog/${meta.id}.png`,
+        url: `https://withpace.github.io/trainhub/og/blog/${meta.id}.webp`,
         width: 1200,
         height: 630,
       },
@@ -261,7 +261,7 @@ export default function BlogPostPage() {
         url: 'https://withpace.github.io/trainhub/',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://withpace.github.io/trainhub/og-image.png',
+          url: 'https://withpace.github.io/trainhub/og-image.webp',
           width: 1200,
           height: 630,
         },
@@ -314,7 +314,7 @@ export default function BlogPostPage() {
         title={`${meta.title} - TrainHub 行业洞察`}
         description={meta.excerpt}
         path={`/blog/${meta.id}`}
-        ogImage={`https://withpace.github.io/trainhub/og/blog/${meta.id}.png`}
+        ogImage={`https://withpace.github.io/trainhub/og/blog/${meta.id}.webp`}
         type="article"
         publishDate={meta.publishDate}
       />

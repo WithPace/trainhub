@@ -129,7 +129,7 @@ export default function CourseDetailPage() {
         title={`${course.title} | TrainHub 培训课程`}
         description={course.description}
         path={`/courses/${course.id}`}
-        ogImage={`https://withpace.github.io/trainhub/og/courses/${course.id}.png`}
+        ogImage={`https://withpace.github.io/trainhub/og/courses/${course.id}.webp`}
       />
       {/* 结构化数据 */}
       <JsonLd data={buildCourseSchema(course, trainer)} />

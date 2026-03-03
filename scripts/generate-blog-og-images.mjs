@@ -5,7 +5,7 @@
  * 构建时为每篇博客文章生成个性化 og:image PNG（1200×630）。
  * 每篇文章一张独立卡片：品牌渐变背景 + 文章标题 + 分类标签 + 阅读时间。
  *
- * 输出: public/og/blog/{slug}.png
+ * 输出: public/og/blog/{slug}.webp
  * 用法: node scripts/generate-blog-og-images.mjs
  */
 
@@ -237,7 +237,7 @@ async function main() {
   let skipped = 0
 
   for (const post of posts) {
-    const outPath = resolve(OUTPUT_DIR, `${post.id}.png`)
+    const outPath = resolve(OUTPUT_DIR, `${post.id}.webp`)
 
     // 增量生成：跳过已存在的图片（开发时可删除 public/og/blog/ 强制重新生成）
     if (existsSync(outPath)) {
@@ -249,7 +249,7 @@ async function main() {
 
     await sharp(Buffer.from(svg))
       .resize(WIDTH, HEIGHT)
-      .png({ compressionLevel: 6 })
+      .webp({ quality: 85, effort: 6 })
       .toFile(outPath)
 
     generated++
