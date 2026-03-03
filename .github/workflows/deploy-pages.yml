@@ -48,3 +48,7 @@ jobs:
           publish_dir: ./dist
           force_orphan: true
           commit_message: 'deploy: ${{ github.sha }}'
+
+      - name: Submit to IndexNow & Google
+        run: node scripts/submit-indexnow.mjs
+        continue-on-error: true
