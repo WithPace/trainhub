@@ -12,24 +12,29 @@ import { allQuestionIds, calculateReport } from '@/lib/assessment'
 import { decodeScores, buildAssessmentSchema } from '@/lib/assessment-share'
 
 export default function AssessmentPage() {
-  const [scores, setScores] = useState<Record<string, number>>({})
-  const [showResult, setShowResult] = useState(false)
-
-  // 页面加载时检查 URL 参数，自动恢复分享结果
-  useEffect(() => {
+  // 页面加载时检查 URL 参数，自动恢复分享结果（避免在 effect 中同步 setState）
+  const sharedScores = useMemo(() => {
     const params = new URLSearchParams(window.location.search)
     const encoded = params.get('r')
     if (encoded) {
       const decoded = decodeScores(encoded)
       if (decoded) {
-        setScores(decoded)
-        setShowResult(true)
-        setTimeout(() => {
-          document.getElementById('assessment-result')?.scrollIntoView({ behavior: 'smooth' })
-        }, 300)
+        return decoded
       }
     }
+    return null
   }, [])
+
+  const [scores, setScores] = useState<Record<string, number>>(() => sharedScores ?? {})
+  const [showResult, setShowResult] = useState(Boolean(sharedScores))
+
+  useEffect(() => {
+    if (!showResult || !sharedScores) return
+    const timer = window.setTimeout(() => {
+      document.getElementById('assessment-result')?.scrollIntoView({ behavior: 'smooth' })
+    }, 300)
+    return () => window.clearTimeout(timer)
+  }, [showResult, sharedScores])
 
   const allAnswered = allQuestionIds.every(id => scores[id] !== undefined)
 

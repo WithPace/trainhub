@@ -3,7 +3,7 @@ import { ChevronRight, ArrowRight } from 'lucide-react'
 import type { TopicData } from '@/data/topics'
 
 // 每个分类对应的渐变背景
-export const heroBgMap: Record<string, string> = {
+const heroBgMap: Record<string, string> = {
   leadership: 'from-blue-600 to-blue-800',
   sales: 'from-orange-500 to-orange-700',
   digital: 'from-violet-600 to-violet-800',

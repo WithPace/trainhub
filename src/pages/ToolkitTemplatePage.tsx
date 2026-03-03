@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import {
   ChevronRight, ArrowLeft, Printer,
   ClipboardList, FileText, BarChart3, Calculator, FileSearch, TrendingUp,
-  Lightbulb, ArrowRight, CheckSquare, Square,
+  Lightbulb, CheckSquare, Square,
 } from 'lucide-react'
 import PageHead from '@/components/seo/PageHead'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -204,23 +204,38 @@ export default function ToolkitTemplatePage() {
     ? getToolkitTemplateById(slug)
     : undefined
 
-  // 清单勾选状态
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
-  // 表单字段值
-  const [formValues, setFormValues] = useState<Record<string, string>>({})
+  const currentTemplateKey = slug ?? ''
+
+  // 清单勾选状态（按模板 slug 隔离，避免在 effect 中同步重置 state）
+  const [checkedByTemplate, setCheckedByTemplate] = useState<Record<string, Record<string, boolean>>>({})
+  // 表单字段值（按模板 slug 隔离）
+  const [formValuesByTemplate, setFormValuesByTemplate] = useState<Record<string, Record<string, string>>>({})
+
+  const checked = checkedByTemplate[currentTemplateKey] ?? {}
+  const formValues = formValuesByTemplate[currentTemplateKey] ?? {}
 
   const toggleCheck = (key: string) => {
-    setChecked((prev) => ({ ...prev, [key]: !prev[key] }))
+    setCheckedByTemplate((prev) => {
+      const current = prev[currentTemplateKey] ?? {}
+      return {
+        ...prev,
+        [currentTemplateKey]: { ...current, [key]: !current[key] },
+      }
+    })
   }
 
   const handleFormChange = (key: string, value: string) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }))
+    setFormValuesByTemplate((prev) => {
+      const current = prev[currentTemplateKey] ?? {}
+      return {
+        ...prev,
+        [currentTemplateKey]: { ...current, [key]: value },
+      }
+    })
   }
 
-  // 切换模板时重置状态并滚动到顶部
+  // 切换模板时滚动到顶部
   useEffect(() => {
-    setChecked({})
-    setFormValues({})
     window.scrollTo(0, 0)
   }, [slug])
 
