@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Clock, Users, DollarSign, CheckCircle } from 'lucide-react'
+import { Clock, Users, DollarSign, CheckCircle, ChevronDown, Star, Briefcase, Award } from 'lucide-react'
 import { getCourseById as fetchCourse, getTrainerById as fetchTrainer, getRelatedCourses } from '@/services/api'
 import { getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
 import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
@@ -28,6 +28,50 @@ function formatPriceRange(range: string): string {
   const high = Math.round(parseInt(parts[1]) / 10000)
   if (low === high) return `${low}万`
   return `${low}-${high}万`
+}
+
+/** 将大纲按 "Day X:" 分组，无 Day 标题则整体为一组 */
+function groupOutline(outline: string[]): { title: string; items: string[] }[] {
+  const groups: { title: string; items: string[] }[] = []
+  for (const item of outline) {
+    if (item.startsWith('Day')) {
+      groups.push({ title: item, items: [] })
+    } else if (groups.length > 0) {
+      groups[groups.length - 1].items.push(item)
+    } else {
+      // 没有 Day 标题的条目，归入默认组
+      if (groups.length === 0) groups.push({ title: '课程内容', items: [] })
+      groups[0].items.push(item)
+    }
+  }
+  return groups
+}
+
+/** 可折叠大纲分组 */
+function OutlineGroup({ group, defaultOpen }: { group: { title: string; items: string[] }; defaultOpen: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div className="rounded-lg border border-gray-200">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-gray-50"
+      >
+        <span className="text-sm font-semibold text-gray-900">{group.title}</span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="space-y-2 border-t border-gray-100 px-4 py-3">
+          {group.items.map((item, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+              <span className="text-sm text-gray-700">{item}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function CourseDetailPage() {
@@ -108,29 +152,13 @@ export default function CourseDetailPage() {
               <p className="mt-3 text-gray-600">{course.description}</p>
             </div>
 
-            {/* 课程大纲 */}
+            {/* 课程大纲（可折叠分组） */}
             <div className="mt-8">
               <h2 className="text-xl font-bold text-gray-900">课程大纲</h2>
               <div className="mt-4 space-y-3">
-                {course.outline.map((item, index) => {
-                  const isGroupTitle = item.startsWith('Day')
-                  return isGroupTitle ? (
-                    <h3
-                      key={index}
-                      className="mt-6 text-base font-semibold text-gray-900 first:mt-0"
-                    >
-                      {item}
-                    </h3>
-                  ) : (
-                    <div
-                      key={index}
-                      className="flex items-start gap-3 rounded-lg bg-gray-50 px-4 py-3"
-                    >
-                      <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
-                      <span className="text-sm text-gray-700">{item}</span>
-                    </div>
-                  )
-                })}
+                {groupOutline(course.outline).map((group, i) => (
+                  <OutlineGroup key={i} group={group} defaultOpen={i === 0} />
+                ))}
               </div>
             </div>
 
@@ -192,7 +220,7 @@ export default function CourseDetailPage() {
                 立即咨询
               </button>
 
-              {/* 培训师信息 */}
+              {/* 培训师信息 + 资质徽章 */}
               {trainer && (
                 <div className="mt-6 border-t border-gray-200 pt-6">
                   <h3 className="text-sm font-semibold text-gray-900">授课培训师</h3>
@@ -208,6 +236,21 @@ export default function CourseDetailPage() {
                       <p className="text-xs text-gray-500">{trainer.title}</p>
                     </div>
                   </Link>
+                  {/* 资质徽章 */}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2.5 py-1 text-xs font-medium text-yellow-700">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      {trainer.rating}分
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                      <Briefcase className="h-3 w-3" />
+                      {trainer.years_experience}年经验
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
+                      <Award className="h-3 w-3" />
+                      {trainer.review_count}条评价
+                    </span>
+                  </div>
                 </div>
               )}
             </div>

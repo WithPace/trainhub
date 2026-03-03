@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from '@/components/layout/Layout'
 import FloatingContact from '@/components/ui/FloatingContact'
+import MobileBottomCTA from '@/components/ui/MobileBottomCTA'
 import { usePageTracking } from '@/hooks/usePageTracking'
 // HomePage 同步加载 — 首屏 LCP 关键路径
 import HomePage from '@/pages/HomePage'
@@ -54,6 +55,7 @@ export default function App() {
         </Routes>
       </Suspense>
       <FloatingContact />
+      <MobileBottomCTA />
     </Layout>
   )
 }

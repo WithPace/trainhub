@@ -8,8 +8,9 @@ import { MessageCircle, X, Mail, Phone } from 'lucide-react'
 export default function FloatingContact() {
   const [open, setOpen] = useState(false)
 
+  // bottom-20 在移动端为底部固定 CTA 栏让出空间
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-3 lg:bottom-6 lg:right-6">
       {/* 展开的联系方式面板 */}
       {open && (
         <div className="mb-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border border-gray-200 bg-white p-4 shadow-2xl sm:p-5">

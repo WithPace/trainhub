@@ -25,6 +25,13 @@ const durationOptions = [
   { label: '2天', value: '2' },
 ]
 
+const sortOptions = [
+  { label: '默认排序', value: '' },
+  { label: '价格从低到高', value: 'price-asc' },
+  { label: '价格从高到低', value: 'price-desc' },
+  { label: '时长从短到长', value: 'duration-asc' },
+]
+
 export default function CoursesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialQuery = searchParams.get('q') ?? ''
@@ -34,6 +41,7 @@ export default function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory)
   const [selectedPriceRange, setSelectedPriceRange] = useState(0)
   const [selectedDuration, setSelectedDuration] = useState('')
+  const [sortBy, setSortBy] = useState('')
 
   const { data: allCourses, loading } = useQuery(() => getCourses(), [])
   const { data: categories } = useQuery(() => getCategories(), [])
@@ -52,7 +60,7 @@ export default function CoursesPage() {
     if (!allCourses) return []
     const priceRange = priceRanges[selectedPriceRange]
 
-    return allCourses.filter(course => {
+    const filtered = allCourses.filter(course => {
       const matchesSearch =
         !searchQuery ||
         course.title.includes(searchQuery) ||
@@ -75,9 +83,21 @@ export default function CoursesPage() {
 
       return matchesSearch && matchesCategory && matchesPrice && matchesDuration
     })
-  }, [allCourses, searchQuery, selectedCategory, selectedPriceRange, selectedDuration])
 
-  const hasFilters = searchQuery || selectedCategory || selectedPriceRange !== 0 || selectedDuration
+    // 排序
+    if (sortBy === 'price-asc') {
+      filtered.sort((a, b) => getMinPrice(a.price_range) - getMinPrice(b.price_range))
+    } else if (sortBy === 'price-desc') {
+      filtered.sort((a, b) => getMinPrice(b.price_range) - getMinPrice(a.price_range))
+    } else if (sortBy === 'duration-asc') {
+      const getDays = (d: string) => d.includes('2天') ? 2 : d.includes('1天') ? 1 : 0.5
+      filtered.sort((a, b) => getDays(a.duration) - getDays(b.duration))
+    }
+
+    return filtered
+  }, [allCourses, searchQuery, selectedCategory, selectedPriceRange, selectedDuration, sortBy])
+
+  const hasFilters = searchQuery || selectedCategory || selectedPriceRange !== 0 || selectedDuration || sortBy
   const selectClass = 'rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
 
   return (
@@ -119,6 +139,15 @@ export default function CoursesPage() {
             className={selectClass}
           >
             {durationOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            className={selectClass}
+          >
+            {sortOptions.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
             ))}
           </select>
@@ -166,6 +195,7 @@ export default function CoursesPage() {
                 setSelectedCategory('')
                 setSelectedPriceRange(0)
                 setSelectedDuration('')
+                setSortBy('')
                 setSearchParams({})
               }}
               className="text-sm text-blue-600 hover:text-blue-800"

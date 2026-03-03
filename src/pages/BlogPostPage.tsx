@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck, TrendingUp } from 'lucide-react'
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck, TrendingUp, BookOpen, DollarSign } from 'lucide-react'
 import { getBlogPostMetaBySlug, getRelatedBlogPostsByKeywords, getPopularBlogPosts } from '@/data/blog-meta'
 import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
 import ReadingProgressBar from '@/components/ui/ReadingProgressBar'
+import TableOfContents, { type TocItem } from '@/components/ui/TableOfContents'
 import PageHead from '@/components/seo/PageHead'
 import type { ContentBlock } from '@/data/blog-meta'
+import { getCourses } from '@/services/api'
+import type { Course } from '@/types'
+import { injectInternalLinks } from '@/lib/auto-link'
 
 /** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
 function renderTextWithLinks(text: string): React.ReactNode {
@@ -24,18 +28,34 @@ function renderTextWithLinks(text: string): React.ReactNode {
   })
 }
 
+/** 生成标题锚点 ID */
+function headingToId(text: string): string {
+  return 'h-' + text.replace(/[^\u4e00-\u9fa5\w]+/g, '-').replace(/^-|-$/g, '').toLowerCase()
+}
+
+/** 从内容块中提取 TOC 条目 */
+export function extractTocItems(blocks: ContentBlock[]): TocItem[] {
+  return blocks
+    .filter(b => b.type === 'heading2' || b.type === 'heading3')
+    .map(b => ({
+      id: headingToId(b.text),
+      text: b.text,
+      level: b.type === 'heading2' ? 2 : 3,
+    }))
+}
+
 /** 渲染内容块 */
 function renderContentBlock(block: ContentBlock, index: number) {
   switch (block.type) {
     case 'heading2':
       return (
-        <h2 key={index} className="mt-10 mb-4 text-xl font-bold text-gray-900 sm:text-2xl">
+        <h2 key={index} id={headingToId(block.text)} className="mt-10 mb-4 scroll-mt-24 text-xl font-bold text-gray-900 sm:text-2xl">
           {block.text}
         </h2>
       )
     case 'heading3':
       return (
-        <h3 key={index} className="mt-8 mb-3 text-lg font-semibold text-gray-900">
+        <h3 key={index} id={headingToId(block.text)} className="mt-8 mb-3 scroll-mt-24 text-lg font-semibold text-gray-900">
           {block.text}
         </h3>
       )
@@ -114,6 +134,60 @@ function ContentSkeleton() {
   )
 }
 
+/** 价格区间格式化 */
+function formatPriceRange(range: string): string {
+  const parts = range.split('-')
+  if (parts.length !== 2) return range
+  const low = Math.round(parseInt(parts[0]) / 10000)
+  const high = Math.round(parseInt(parts[1]) / 10000)
+  if (low === high) return `${low}万`
+  return `${low}-${high}万`
+}
+
+/** 文章内嵌课程推荐 CTA — 在文章中间转化读者 */
+function InlineCoursesCTA({ courses }: { courses: Course[] }) {
+  if (courses.length === 0) return null
+  return (
+    <div className="my-8 rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-5 sm:p-6">
+      <p className="flex items-center gap-2 text-sm font-bold text-blue-900">
+        <BookOpen className="h-4 w-4" />
+        相关课程推荐
+      </p>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        {courses.map(course => (
+          <Link
+            key={course.id}
+            to={`/courses/${course.id}`}
+            className="group rounded-lg border border-blue-100 bg-white p-4 transition-shadow hover:shadow-md"
+          >
+            <p className="line-clamp-1 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+              {course.title}
+            </p>
+            {course.trainer_name && (
+              <p className="mt-1 text-xs text-gray-500">讲师：{course.trainer_name}</p>
+            )}
+            <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" /> {course.duration}
+              </span>
+              <span className="flex items-center gap-1 font-medium text-blue-600">
+                <DollarSign className="h-3 w-3" />
+                {formatPriceRange(course.price_range)}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+      <Link
+        to="/courses"
+        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800"
+      >
+        查看全部课程 <ArrowRight className="h-3 w-3" />
+      </Link>
+    </div>
+  )
+}
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
   const meta = slug ? getBlogPostMetaBySlug(slug) : undefined
@@ -124,6 +198,26 @@ export default function BlogPostPage() {
 
   // 文章正文按需加载（每篇文章独立 chunk，~8-21KB，替代旧的 540KB 全量加载）
   const [content, setContent] = useState<ContentBlock[] | null>(null)
+  const [relatedCourses, setRelatedCourses] = useState<Course[]>([])
+
+  // 提取 TOC 条目
+  const tocItems = useMemo(() => content ? extractTocItems(content) : [], [content])
+
+  // 加载与文章主题相关的课程（用于文章内嵌 CTA）
+  useEffect(() => {
+    if (!meta) return
+    getCourses().then(courses => {
+      const lowerTags = meta.tags.map(t => t.toLowerCase())
+      const matched = courses.filter(c =>
+        lowerTags.some(tag =>
+          c.category_name?.toLowerCase().includes(tag) ||
+          tag.includes(c.category_name?.toLowerCase() ?? '') ||
+          c.title.toLowerCase().includes(tag)
+        )
+      ).slice(0, 2)
+      setRelatedCourses(matched)
+    })
+  }, [meta])
 
   useEffect(() => {
     if (!slug) return
@@ -263,10 +357,36 @@ export default function BlogPostPage() {
                 </div>
               </header>
 
-              {/* 文章正文 — 按需加载 */}
+              {/* 移动端 TOC — 折叠式目录 */}
+              {tocItems.length >= 3 && (
+                <div className="mt-6">
+                  <TableOfContents items={tocItems} />
+                </div>
+              )}
+
+              {/* 文章正文 — 按需加载，自动内链 + 中间插入课程推荐 CTA */}
               {content ? (
                 <div className="mt-8">
-                  {content.map((block, index) => renderContentBlock(block, index))}
+                  {(() => {
+                    const mid = Math.floor(content.length / 2)
+                    // 跨段落去重：每个 URL 只链接一次
+                    const linked = new Set<string>()
+                    const renderWithAutoLink = (block: ContentBlock, index: number) => {
+                      // 仅对 paragraph 和 list 类型注入内链
+                      if (block.type === 'paragraph' || block.type === 'list') {
+                        const enrichedText = injectInternalLinks(block.text, linked)
+                        return renderContentBlock({ ...block, text: enrichedText }, index)
+                      }
+                      return renderContentBlock(block, index)
+                    }
+                    return (
+                      <>
+                        {content.slice(0, mid).map((block, i) => renderWithAutoLink(block, i))}
+                        {relatedCourses.length > 0 && <InlineCoursesCTA courses={relatedCourses} />}
+                        {content.slice(mid).map((block, i) => renderWithAutoLink(block, mid + i))}
+                      </>
+                    )
+                  })()}
                 </div>
               ) : (
                 <ContentSkeleton />
@@ -277,6 +397,9 @@ export default function BlogPostPage() {
           {/* 侧边栏 — 桌面端显示 */}
           <aside className="hidden w-72 shrink-0 lg:block">
             <div className="sticky top-6 space-y-6">
+              {/* 文章目录 */}
+              {tocItems.length >= 3 && <TableOfContents items={tocItems} />}
+
               {/* 热门文章 */}
               <div className="rounded-xl border border-gray-200 bg-white p-5">
                 <h3 className="flex items-center gap-2 text-sm font-bold text-gray-900">

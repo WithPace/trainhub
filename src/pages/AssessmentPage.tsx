@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { JsonLd } from '@/components/seo/JsonLd'
 import PageHead from '@/components/seo/PageHead'
+import { generatePoster, downloadPoster } from '@/lib/poster-generator'
 
 // ──────────────────── 类型定义 ────────────────────
 
@@ -306,6 +307,9 @@ export default function AssessmentPage() {
   const [showResult, setShowResult] = useState(false)
   // 分享链接复制反馈
   const [copied, setCopied] = useState(false)
+  // 海报生成状态
+  const [posterUrl, setPosterUrl] = useState<string | null>(null)
+  const [generatingPoster, setGeneratingPoster] = useState(false)
 
   // 页面加载时检查 URL 参数，自动恢复分享结果
   useEffect(() => {
@@ -355,6 +359,35 @@ export default function AssessmentPage() {
     window.history.replaceState(null, '', window.location.pathname)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  // 生成海报图片
+  const handleGeneratePoster = useCallback(async () => {
+    if (!report) return
+    setGeneratingPoster(true)
+    try {
+      const url = await generatePoster({
+        overallScore: report.overallScore,
+        overallLevel: report.overallLevel,
+        overallLevelLabel: getLevelLabel(report.overallLevel),
+        overallComment: report.overallComment,
+        dimensions: report.dimensions.map(d => ({
+          name: d.dimension.name,
+          score: d.averageScore,
+          level: d.level,
+          levelLabel: getLevelLabel(d.level),
+        })),
+        shareUrl: buildShareUrl(scores),
+      })
+      setPosterUrl(url)
+    } finally {
+      setGeneratingPoster(false)
+    }
+  }, [report, scores])
+
+  // 下载海报
+  const handleDownloadPoster = useCallback(() => {
+    if (posterUrl) downloadPoster(posterUrl)
+  }, [posterUrl])
 
   // 复制分享链接
   const handleCopyShareLink = useCallback(() => {
@@ -605,8 +638,68 @@ export default function AssessmentPage() {
               ))}
             </div>
 
+            {/* 生成分享海报 */}
+            <div className="mt-8 rounded-xl border border-indigo-200 bg-indigo-50 p-6 sm:p-8">
+              <h3 className="text-center text-lg font-bold text-gray-900">
+                生成分享海报
+              </h3>
+              <p className="mt-2 text-center text-sm text-gray-500">
+                一键生成精美海报图片，分享到朋友圈或社交媒体
+              </p>
+
+              {!posterUrl ? (
+                <div className="mt-4 text-center">
+                  <button
+                    type="button"
+                    onClick={handleGeneratePoster}
+                    disabled={generatingPoster}
+                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    {generatingPoster ? '生成中...' : '生成海报图片'}
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-4 space-y-4">
+                  {/* 海报预览 */}
+                  <div className="mx-auto max-w-xs overflow-hidden rounded-lg border border-gray-200 shadow-md">
+                    <img src={posterUrl} alt="诊断结果海报" className="w-full" />
+                  </div>
+                  {/* 操作按钮 */}
+                  <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                    <button
+                      type="button"
+                      onClick={handleDownloadPoster}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 sm:w-auto"
+                    >
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                      保存海报图片
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGeneratePoster}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto"
+                    >
+                      重新生成
+                    </button>
+                  </div>
+                  <p className="text-center text-xs text-gray-400">
+                    长按海报图片可直接保存到手机相册
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* 分享诊断结果 */}
-            <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-6 sm:p-8">
+            <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-6 sm:p-8">
               <h3 className="text-center text-lg font-bold text-gray-900">
                 分享诊断结果
               </h3>

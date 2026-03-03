@@ -12,11 +12,19 @@ const experienceRanges = [
   { label: '15年以上', min: 15, max: Infinity },
 ]
 
+const sortOptions = [
+  { label: '默认排序', value: '' },
+  { label: '评分最高', value: 'rating-desc' },
+  { label: '经验最丰富', value: 'exp-desc' },
+  { label: '评价最多', value: 'reviews-desc' },
+]
+
 export default function TrainersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
   const [selectedExpRange, setSelectedExpRange] = useState(0) // index into experienceRanges
+  const [sortBy, setSortBy] = useState('')
 
   const { data: allTrainers, loading } = useQuery(() => getTrainers(), [])
   const { data: cities } = useQuery(() => getAllCities(), [])
@@ -27,7 +35,7 @@ export default function TrainersPage() {
     if (!allTrainers) return []
     const expRange = experienceRanges[selectedExpRange]
 
-    return allTrainers.filter(trainer => {
+    const filtered = allTrainers.filter(trainer => {
       const matchesSearch =
         !searchQuery ||
         trainer.name.includes(searchQuery) ||
@@ -46,7 +54,18 @@ export default function TrainersPage() {
 
       return matchesSearch && matchesCity && matchesSpecialty && matchesExp
     })
-  }, [allTrainers, searchQuery, selectedCity, selectedSpecialty, selectedExpRange])
+
+    // 排序
+    if (sortBy === 'rating-desc') {
+      filtered.sort((a, b) => b.rating - a.rating)
+    } else if (sortBy === 'exp-desc') {
+      filtered.sort((a, b) => b.years_experience - a.years_experience)
+    } else if (sortBy === 'reviews-desc') {
+      filtered.sort((a, b) => b.review_count - a.review_count)
+    }
+
+    return filtered
+  }, [allTrainers, searchQuery, selectedCity, selectedSpecialty, selectedExpRange, sortBy])
 
   const selectClass = 'rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
 
@@ -103,6 +122,15 @@ export default function TrainersPage() {
               <option key={i} value={i}>{range.label}</option>
             ))}
           </select>
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            className={selectClass}
+          >
+            {sortOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
         </div>
 
         {/* 结果计数 + 重置按钮 */}
@@ -110,7 +138,7 @@ export default function TrainersPage() {
           <p className="text-sm text-gray-500">
             {loading ? '加载中...' : `共 ${filteredTrainers.length} 位培训师`}
           </p>
-          {(searchQuery || selectedCity || selectedSpecialty || selectedExpRange !== 0) && (
+          {(searchQuery || selectedCity || selectedSpecialty || selectedExpRange !== 0 || sortBy) && (
             <button
               type="button"
               onClick={() => {
@@ -118,6 +146,7 @@ export default function TrainersPage() {
                 setSelectedCity('')
                 setSelectedSpecialty('')
                 setSelectedExpRange(0)
+                setSortBy('')
               }}
               className="text-sm text-blue-600 hover:text-blue-800"
             >
