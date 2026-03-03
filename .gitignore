@@ -15,6 +15,10 @@ dist-ssr
 # Wrangler local state
 .wrangler/
 
+# Generated og:image files (built by scripts/generate-*.mjs)
+public/og-image.png
+public/og/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

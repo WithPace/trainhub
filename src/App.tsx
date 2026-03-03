@@ -1,11 +1,13 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from '@/components/layout/Layout'
-import FloatingContact from '@/components/ui/FloatingContact'
-import MobileBottomCTA from '@/components/ui/MobileBottomCTA'
 import { usePageTracking } from '@/hooks/usePageTracking'
 // HomePage 同步加载 — 首屏 LCP 关键路径
 import HomePage from '@/pages/HomePage'
+
+// 非首屏关键 UI — 延迟加载，不阻塞 LCP / INP
+const FloatingContact = lazy(() => import('@/components/ui/FloatingContact'))
+const MobileBottomCTA = lazy(() => import('@/components/ui/MobileBottomCTA'))
 
 // 其余页面按路由懒加载，blog 内容由 BlogPostPage 按需动态加载
 const TrainersPage = lazy(() => import('@/pages/TrainersPage'))
@@ -58,8 +60,10 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-      <FloatingContact />
-      <MobileBottomCTA />
+      <Suspense fallback={null}>
+        <FloatingContact />
+        <MobileBottomCTA />
+      </Suspense>
     </Layout>
   )
 }

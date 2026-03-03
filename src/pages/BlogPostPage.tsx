@@ -234,12 +234,23 @@ export default function BlogPostPage() {
   useEffect(() => {
     if (!meta) return
 
+    // 计算中文 wordCount：所有 content block 的 text 总字符数（去掉空格和换行）
+    const wordCount = content
+      ? content.reduce((sum, block) => sum + block.text.replace(/[\s\n]/g, '').length, 0)
+      : undefined
+
     // JSON-LD: Article schema
-    const jsonLd = {
+    const jsonLd: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: meta.title,
       description: meta.excerpt,
+      image: {
+        '@type': 'ImageObject',
+        url: `https://withpace.github.io/trainhub/og/blog/${meta.id}.png`,
+        width: 1200,
+        height: 630,
+      },
       author: {
         '@type': 'Person',
         name: meta.author,
@@ -248,6 +259,12 @@ export default function BlogPostPage() {
         '@type': 'Organization',
         name: 'TrainHub',
         url: 'https://withpace.github.io/trainhub/',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://withpace.github.io/trainhub/og-image.png',
+          width: 1200,
+          height: 630,
+        },
       },
       datePublished: meta.publishDate,
       dateModified: meta.publishDate,
@@ -257,6 +274,10 @@ export default function BlogPostPage() {
       },
       articleSection: meta.category,
       keywords: meta.tags.join(', '),
+    }
+
+    if (wordCount !== undefined) {
+      jsonLd.wordCount = wordCount
     }
 
     const script = document.createElement('script')
@@ -272,7 +293,7 @@ export default function BlogPostPage() {
       const existing = document.getElementById('blog-post-jsonld')
       if (existing) existing.remove()
     }
-  }, [meta])
+  }, [meta, content])
 
   // 文章未找到
   if (!meta) {
@@ -293,6 +314,7 @@ export default function BlogPostPage() {
         title={`${meta.title} - TrainHub 行业洞察`}
         description={meta.excerpt}
         path={`/blog/${meta.id}`}
+        ogImage={`https://withpace.github.io/trainhub/og/blog/${meta.id}.png`}
         type="article"
         publishDate={meta.publishDate}
       />

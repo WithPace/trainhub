@@ -14,11 +14,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // React 核心 — 版本稳定，长期缓存
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          // 图标库单独分块 — 体积大但变动少
-          icons: ['lucide-react'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          // React 全家桶（含 scheduler/react-dom/client 等子模块）
+          if (/node_modules\/(react|react-dom|scheduler|react-router)/.test(id)) {
+            return 'vendor'
+          }
+          // 图标库 — tree-shaken，变动少
+          if (id.includes('lucide-react')) return 'icons'
+          // CSS 工具库 — 极少变动
+          if (/tailwind-merge|clsx/.test(id)) return 'tw-utils'
         },
       },
     },
