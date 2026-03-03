@@ -133,15 +133,10 @@ async function main() {
     await submitBatch(engine, urls)
   }
 
-  // 同时 ping Google sitemap（Google 不支持 IndexNow 但支持 sitemap ping）
-  try {
-    const sitemapUrl = `${SITE_URL}/trainhub/sitemap.xml`
-    const googlePing = `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`
-    const res = await fetch(googlePing)
-    console.log(`  ${res.ok ? 'OK' : 'WARN'}  Google sitemap ping (${res.status})`)
-  } catch (err) {
-    console.log(`  FAIL Google sitemap ping — ${err.message}`)
-  }
+  // Google sitemap ping endpoint 已于 2024 年正式废弃（返回 404）
+  // Google 收录需通过 Search Console 提交 sitemap
+  console.log('  INFO Google sitemap ping — skipped (endpoint deprecated since 2024, use Search Console)')
+  console.log(`       Sitemap: ${SITE_URL}/trainhub/sitemap.xml`)
 
   console.log('\n  Done.\n')
 }

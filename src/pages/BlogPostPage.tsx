@@ -10,6 +10,7 @@ import type { ContentBlock } from '@/data/blog-meta'
 import { getCourses } from '@/services/api'
 import type { Course } from '@/types'
 import { injectInternalLinks } from '@/lib/auto-link'
+import ShareButtons from '@/components/ui/ShareButtons'
 
 /** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
 function renderTextWithLinks(text: string): React.ReactNode {
@@ -344,16 +345,19 @@ export default function BlogPostPage() {
                   </span>
                 </div>
 
-                {/* 标签 */}
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {meta.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                {/* 标签 + 分享按钮 */}
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap gap-2">
+                    {meta.tags.map(tag => (
+                      <span
+                        key={tag}
+                        className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <ShareButtons title={meta.title} />
                 </div>
               </header>
 
@@ -390,6 +394,14 @@ export default function BlogPostPage() {
                 </div>
               ) : (
                 <ContentSkeleton />
+              )}
+
+              {/* 文章底部分享栏 */}
+              {content && (
+                <div className="mt-10 flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
+                  <p className="text-sm font-medium text-gray-700">觉得有价值？分享给同行</p>
+                  <ShareButtons title={meta.title} />
+                </div>
               )}
             </div>
           </article>
