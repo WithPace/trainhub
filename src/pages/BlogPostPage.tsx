@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck } from 'lucide-react'
-import { getBlogPostMetaBySlug, getRelatedPostsMeta } from '@/data/blog-meta'
+import { getBlogPostMetaBySlug, getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
+import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
 import PageHead from '@/components/seo/PageHead'
 import type { ContentBlock } from '@/data/blog-meta'
 
@@ -115,7 +116,8 @@ function ContentSkeleton() {
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
   const meta = slug ? getBlogPostMetaBySlug(slug) : undefined
-  const relatedPosts = slug ? getRelatedPostsMeta(slug, 3) : []
+  // 基于标签的加权匹配推荐（比同分类匹配更精准）
+  const relatedPosts = meta ? getRelatedBlogPostsByKeywords(meta.tags, 3, meta.id) : []
 
   // 文章正文按需加载（每篇文章独立 chunk，~8-21KB，替代旧的 540KB 全量加载）
   const [content, setContent] = useState<ContentBlock[] | null>(null)
@@ -289,33 +291,11 @@ export default function BlogPostPage() {
         </div>
       </section>
 
-      {/* 相关文章推荐 */}
+      {/* 相关文章推荐（基于标签加权匹配） */}
       {relatedPosts.length > 0 && (
         <section className="border-t border-gray-200 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-xl font-bold text-gray-900">推荐阅读</h2>
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-              {relatedPosts.map(related => (
-                <Link
-                  key={related.id}
-                  to={`/blog/${related.id}`}
-                  className="group rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-blue-300 hover:shadow-md"
-                >
-                  <span className="text-xs font-medium text-blue-600">
-                    {related.category}
-                  </span>
-                  <h3 className="mt-2 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
-                    {related.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-gray-500">
-                    {related.excerpt}
-                  </p>
-                  <span className="mt-3 flex items-center gap-1 text-xs font-medium text-blue-600">
-                    阅读全文 <ArrowRight className="h-3 w-3" />
-                  </span>
-                </Link>
-              ))}
-            </div>
+            <RelatedBlogSection posts={relatedPosts} title="推荐阅读" />
           </div>
         </section>
       )}

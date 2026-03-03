@@ -181,6 +181,36 @@ export async function getRelatedTrainers(
   return apiFetch<Trainer[]>(`/api/trainers/related?${params}`)
 }
 
+/** 获取同领域的相关课程（排除指定培训师的课程，按专长匹配） */
+export async function getRelatedCoursesBySpecialties(
+  trainerId: number,
+  specialties: string[],
+  limit = 3
+): Promise<Course[]> {
+  if (!useApi) {
+    const mock = await getMock()
+    const lowerSpecs = specialties.map(s => s.toLowerCase())
+    return mock.courses
+      .filter(c =>
+        c.trainer_id !== trainerId &&
+        (
+          lowerSpecs.some(s =>
+            c.category_name?.toLowerCase().includes(s) ||
+            s.includes(c.category_name?.toLowerCase() ?? '') ||
+            c.title.toLowerCase().includes(s)
+          )
+        )
+      )
+      .slice(0, limit)
+  }
+  const params = new URLSearchParams({
+    exclude_trainer: String(trainerId),
+    specialties: specialties.join(','),
+    limit: String(limit),
+  })
+  return apiFetch<Course[]>(`/api/courses/related-by-specialty?${params}`)
+}
+
 // ─── Inquiries ───
 
 /** 外部表单服务端点（Formspree / Getform / Web3Forms 等） */

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Star, MapPin, Briefcase, Mail } from 'lucide-react'
-import { getTrainerById as fetchTrainer, getRelatedTrainers } from '@/services/api'
+import { getTrainerById as fetchTrainer, getRelatedTrainers, getRelatedCoursesBySpecialties } from '@/services/api'
 import { useQuery } from '@/hooks/useQuery'
 import { getAvatarUrl } from '@/lib/utils'
 import CourseCard from '@/components/ui/CourseCard'
@@ -35,6 +35,15 @@ export default function TrainerDetailPage() {
     () =>
       trainer
         ? getRelatedTrainers(trainer.id, trainer.specialties, 3)
+        : Promise.resolve([]),
+    [trainer?.id, trainer?.specialties]
+  )
+
+  // 获取同领域其他培训师的相关课程
+  const { data: relatedCourses } = useQuery(
+    () =>
+      trainer
+        ? getRelatedCoursesBySpecialties(trainer.id, trainer.specialties, 3)
         : Promise.resolve([]),
     [trainer?.id, trainer?.specialties]
   )
@@ -174,6 +183,18 @@ export default function TrainerDetailPage() {
         {/* 相关博客文章 */}
         {relatedBlogPosts.length > 0 && (
           <RelatedBlogSection posts={relatedBlogPosts} title="相关培训干货" />
+        )}
+
+        {/* 同领域相关课程推荐（来自其他培训师） */}
+        {relatedCourses && relatedCourses.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-xl font-bold text-gray-900">同领域热门课程</h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedCourses.map(course => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
