@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck } from 'lucide-react'
-import { getBlogPostMetaBySlug, getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
+import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck, TrendingUp } from 'lucide-react'
+import { getBlogPostMetaBySlug, getRelatedBlogPostsByKeywords, getPopularBlogPosts } from '@/data/blog-meta'
 import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
 import ReadingProgressBar from '@/components/ui/ReadingProgressBar'
 import PageHead from '@/components/seo/PageHead'
@@ -119,6 +119,8 @@ export default function BlogPostPage() {
   const meta = slug ? getBlogPostMetaBySlug(slug) : undefined
   // 基于标签的加权匹配推荐（比同分类匹配更精准）
   const relatedPosts = meta ? getRelatedBlogPostsByKeywords(meta.tags, 3, meta.id) : []
+  // 热门文章（侧边栏，排除当前文章）
+  const popularPosts = meta ? getPopularBlogPosts(5, meta.id) : []
 
   // 文章正文按需加载（每篇文章独立 chunk，~8-21KB，替代旧的 540KB 全量加载）
   const [content, setContent] = useState<ContentBlock[] | null>(null)
@@ -214,60 +216,111 @@ export default function BlogPostPage() {
         </nav>
       </div>
 
-      {/* 文章内容 */}
-      <article className="px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          {/* 文章头部 */}
-          <header>
-            {/* 分类标签 */}
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
-              {meta.category}
-            </span>
-
-            {/* 标题 */}
-            <h1 className="mt-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
-              {meta.title}
-            </h1>
-
-            {/* 元信息栏 */}
-            <div className="mt-5 flex flex-wrap items-center gap-4 border-b border-gray-200 pb-6 text-sm text-gray-500">
-              <span className="flex items-center gap-1">
-                <User className="h-4 w-4" />
-                {meta.author}
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                {meta.publishDate}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                {meta.readTime}
-              </span>
-            </div>
-
-            {/* 标签 */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              {meta.tags.map(tag => (
-                <span
-                  key={tag}
-                  className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
-                >
-                  {tag}
+      {/* 文章内容 + 侧边栏 */}
+      <div className="px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-6xl gap-8">
+          {/* 主内容区 */}
+          <article className="min-w-0 flex-1">
+            <div className="mx-auto max-w-3xl">
+              {/* 文章头部 */}
+              <header>
+                {/* 分类标签 */}
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
+                  {meta.category}
                 </span>
-              ))}
-            </div>
-          </header>
 
-          {/* 文章正文 — 按需加载 */}
-          {content ? (
-            <div className="mt-8">
-              {content.map((block, index) => renderContentBlock(block, index))}
+                {/* 标题 */}
+                <h1 className="mt-4 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
+                  {meta.title}
+                </h1>
+
+                {/* 元信息栏 */}
+                <div className="mt-5 flex flex-wrap items-center gap-4 border-b border-gray-200 pb-6 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <User className="h-4 w-4" />
+                    {meta.author}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    {meta.publishDate}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {meta.readTime}
+                  </span>
+                </div>
+
+                {/* 标签 */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {meta.tags.map(tag => (
+                    <span
+                      key={tag}
+                      className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </header>
+
+              {/* 文章正文 — 按需加载 */}
+              {content ? (
+                <div className="mt-8">
+                  {content.map((block, index) => renderContentBlock(block, index))}
+                </div>
+              ) : (
+                <ContentSkeleton />
+              )}
             </div>
-          ) : (
-            <ContentSkeleton />
-          )}
+          </article>
+
+          {/* 侧边栏 — 桌面端显示 */}
+          <aside className="hidden w-72 shrink-0 lg:block">
+            <div className="sticky top-6 space-y-6">
+              {/* 热门文章 */}
+              <div className="rounded-xl border border-gray-200 bg-white p-5">
+                <h3 className="flex items-center gap-2 text-sm font-bold text-gray-900">
+                  <TrendingUp className="h-4 w-4 text-blue-600" />
+                  热门文章
+                </h3>
+                <div className="mt-4 space-y-4">
+                  {popularPosts.map((post, index) => (
+                    <Link
+                      key={post.id}
+                      to={`/blog/${post.id}`}
+                      className="group flex gap-3"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-500 group-hover:bg-blue-100 group-hover:text-blue-600">
+                        {index + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="line-clamp-2 text-sm leading-snug text-gray-700 group-hover:text-blue-600">
+                          {post.title}
+                        </p>
+                        <p className="mt-1 text-xs text-gray-400">{post.readTime}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* 需求诊断 CTA */}
+              <div className="rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-5 text-white">
+                <h3 className="text-sm font-bold">不确定需要什么培训？</h3>
+                <p className="mt-2 text-xs leading-relaxed text-blue-200">
+                  3分钟诊断企业培训需求，获取专属方案
+                </p>
+                <Link
+                  to="/assessment"
+                  className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white px-4 py-2 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50"
+                >
+                  开始诊断 <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+          </aside>
         </div>
-      </article>
+      </div>
 
       {/* 需求诊断 CTA — 文章读完后引导转化 */}
       <section className="border-t border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-10 sm:px-6 lg:px-8">

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Search, X } from 'lucide-react'
 import { JsonLd } from '@/components/seo/JsonLd'
 import PageHead from '@/components/seo/PageHead'
 
@@ -104,6 +104,22 @@ function FAQAccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: b
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // 根据搜索词过滤 FAQ（匹配问题和答案）
+  const filteredFaqs = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    if (!query) return faqs
+    return faqs.filter(
+      faq => faq.question.toLowerCase().includes(query) || faq.answer.toLowerCase().includes(query),
+    )
+  }, [searchQuery])
+
+  // 搜索词变化时重置展开状态
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value)
+    setOpenIndex(value.trim() ? null : 0)
+  }
 
   return (
     <div>
@@ -127,10 +143,52 @@ export default function FAQPage() {
       {/* FAQ 列表 */}
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
+          {/* 搜索框 */}
+          <div className="relative mb-8">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => handleSearchChange(e.target.value)}
+              placeholder="搜索常见问题..."
+              className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => handleSearchChange('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          {/* 搜索结果提示 */}
+          {searchQuery.trim() && (
+            <p className="mb-4 text-sm text-gray-500">
+              找到 {filteredFaqs.length} 个相关问题
+            </p>
+          )}
+
+          {/* 无结果提示 */}
+          {filteredFaqs.length === 0 && (
+            <div className="py-12 text-center">
+              <p className="text-gray-500">没有找到匹配的问题</p>
+              <button
+                type="button"
+                onClick={() => handleSearchChange('')}
+                className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                清除搜索
+              </button>
+            </div>
+          )}
+
           <div className="divide-y-0">
-            {faqs.map((faq, index) => (
+            {filteredFaqs.map((faq, index) => (
               <FAQAccordionItem
-                key={index}
+                key={faq.question}
                 item={faq}
                 isOpen={openIndex === index}
                 onToggle={() => setOpenIndex(openIndex === index ? null : index)}

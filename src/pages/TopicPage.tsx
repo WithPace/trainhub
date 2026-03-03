@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ChevronDown, ChevronRight, AlertTriangle, Target, TrendingUp, ArrowRight, HelpCircle } from 'lucide-react'
+import { ChevronDown, ChevronRight, AlertTriangle, Target, TrendingUp, ArrowRight, HelpCircle, Calendar, Clock, BookOpen } from 'lucide-react'
 import { getTopicBySlug } from '@/data/topics'
 import { categories, courses, trainers } from '@/data/mock'
 import CourseCard from '@/components/ui/CourseCard'
 import TrainerCard from '@/components/ui/TrainerCard'
 import PageHead from '@/components/seo/PageHead'
 import type { TopicData } from '@/data/topics'
+import type { BlogPostMeta } from '@/data/blog-meta'
 
 // 每个分类对应的浅色背景
 const heroBgMap: Record<string, string> = {
@@ -123,6 +124,17 @@ export default function TopicPage() {
         )
       )
     : []
+
+  // 异步加载该领域的相关博客文章（保持 blog-meta 独立 chunk）
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostMeta[]>([])
+  useEffect(() => {
+    if (!topic || !category) return
+    import('@/data/blog-meta').then(({ getRelatedBlogPostsByKeywords }) => {
+      // 用分类名 + 前3个相关关键词进行匹配
+      const keywords = [category.name, ...topic.relatedKeywords.slice(0, 3)]
+      setRelatedPosts(getRelatedBlogPostsByKeywords(keywords, 4))
+    })
+  }, [topic?.slug, category?.name])
 
   const baseUrl = 'https://withpace.github.io/trainhub/'
 
@@ -319,6 +331,58 @@ export default function TopicPage() {
           </div>
         </div>
       </section>
+
+      {/* Section 6.5: 该领域相关文章 */}
+      {relatedPosts.length > 0 && (
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-2xl font-bold text-gray-900">{category!.name}培训干货</h2>
+                </div>
+                <p className="mt-1 text-gray-500">深度解读{category!.name}领域的培训趋势与实操方法</p>
+              </div>
+              <Link
+                to={`/blog?q=${encodeURIComponent(category!.name)}`}
+                className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                查看更多 <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {relatedPosts.map(post => (
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.id}`}
+                  className="group rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
+                >
+                  <span className="inline-block rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+                    {post.category}
+                  </span>
+                  <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600">
+                    {post.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-gray-500">
+                    {post.excerpt}
+                  </p>
+                  <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {post.publishDate}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {post.readTime}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Section 7: CTA */}
       <section className="bg-blue-600 px-4 py-16 text-center text-white sm:px-6 lg:px-8">

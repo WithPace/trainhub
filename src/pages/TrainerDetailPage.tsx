@@ -24,6 +24,7 @@ import {
 export default function TrainerDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [inquiryOpen, setInquiryOpen] = useState(false)
+  const [courseTab, setCourseTab] = useState<'own' | 'related'>('own')
   const trainerId = Number(id)
 
   const { data: trainer, loading } = useQuery(
@@ -161,19 +162,54 @@ export default function TrainerDetailPage() {
           </div>
         </div>
 
-        {/* 培训师课程 */}
+        {/* 课程 Tab 切换 */}
         <div className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            开设课程（{trainerCourses.length}门）
-          </h2>
-          {trainerCourses.length > 0 ? (
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {trainerCourses.map(course => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
+          <div className="flex gap-1 border-b border-gray-200">
+            <button
+              type="button"
+              onClick={() => setCourseTab('own')}
+              className={`px-4 py-3 text-sm font-medium transition-colors ${
+                courseTab === 'own'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              开设课程（{trainerCourses.length}门）
+            </button>
+            {relatedCourses && relatedCourses.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setCourseTab('related')}
+                className={`px-4 py-3 text-sm font-medium transition-colors ${
+                  courseTab === 'related'
+                    ? 'border-b-2 border-blue-600 text-blue-600'
+                    : 'text-gray-500 hover:text-gray-900'
+                }`}
+              >
+                同领域推荐（{relatedCourses.length}门）
+              </button>
+            )}
+          </div>
+
+          {/* Tab 内容 */}
+          {courseTab === 'own' ? (
+            trainerCourses.length > 0 ? (
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {trainerCourses.map(course => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            ) : (
+              <p className="mt-6 text-gray-500">暂无课程</p>
+            )
           ) : (
-            <p className="mt-4 text-gray-500">暂无课程</p>
+            relatedCourses && relatedCourses.length > 0 && (
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedCourses.map(course => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            )
           )}
         </div>
 
@@ -183,18 +219,6 @@ export default function TrainerDetailPage() {
         {/* 相关博客文章 */}
         {relatedBlogPosts.length > 0 && (
           <RelatedBlogSection posts={relatedBlogPosts} title="相关培训干货" />
-        )}
-
-        {/* 同领域相关课程推荐（来自其他培训师） */}
-        {relatedCourses && relatedCourses.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-xl font-bold text-gray-900">同领域热门课程</h2>
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedCourses.map(course => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-          </div>
         )}
       </div>
 

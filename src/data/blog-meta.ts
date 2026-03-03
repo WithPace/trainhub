@@ -613,6 +613,31 @@ export function getRelatedBlogPostsByKeywords(keywords: string[], limit = 3, exc
     .map(s => s.post)
 }
 
+/** 获取热门文章（基于标签覆盖度 + 时效性综合排序，用于侧边栏展示） */
+export function getPopularBlogPosts(limit = 5, excludeSlug?: string): BlogPostMeta[] {
+  // 统计全局标签频率 — 高频标签意味着更热门的主题
+  const tagFreq: Record<string, number> = {}
+  for (const post of blogPostsMeta) {
+    for (const tag of post.tags) {
+      tagFreq[tag] = (tagFreq[tag] ?? 0) + 1
+    }
+  }
+
+  return [...blogPostsMeta]
+    .filter(post => post.id !== excludeSlug)
+    .map(post => {
+      // 标签热度得分：该文章所有标签的频率之和
+      const tagScore = post.tags.reduce((sum, tag) => sum + (tagFreq[tag] ?? 0), 0)
+      // 时效性加分：最近30天内发布的 +5
+      const daysSincePublish = Math.max(0, (Date.now() - new Date(post.publishDate).getTime()) / 86400000)
+      const recencyBonus = daysSincePublish < 30 ? 5 : daysSincePublish < 60 ? 2 : 0
+      return { post, score: tagScore + recencyBonus }
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(s => s.post)
+}
+
 /** 获取相关文章元数据（同分类，排除当前文章） */
 export function getRelatedPostsMeta(currentSlug: string, limit = 3): BlogPostMeta[] {
   const current = getBlogPostMetaBySlug(currentSlug)

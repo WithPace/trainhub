@@ -117,11 +117,32 @@ export default function BlogPage() {
       ? `共 ${filteredPosts.length} 篇文章`
       : `${selectedCategory} (${filteredPosts.length})`
 
+  // 动态 SEO — 根据筛选状态调整 title 和 description
+  const seoTitle = useMemo(() => {
+    if (searchQuery.trim()) {
+      return `"${searchQuery.trim()}"搜索结果 - TrainHub 行业洞察`
+    }
+    if (selectedCategory !== '全部') {
+      return `${selectedCategory}文章 - TrainHub 行业洞察 | 企业培训干货`
+    }
+    return '行业洞察 - TrainHub | 企业培训行业趋势与最佳实践'
+  }, [searchQuery, selectedCategory])
+
+  const seoDesc = useMemo(() => {
+    if (searchQuery.trim()) {
+      return `在 TrainHub 搜索"${searchQuery.trim()}"，找到 ${filteredPosts.length} 篇企业培训相关文章。`
+    }
+    if (selectedCategory !== '全部') {
+      return `${selectedCategory}分类下共 ${filteredPosts.length} 篇文章，覆盖企业培训的最新趋势、最佳实践和深度分析。`
+    }
+    return '企业培训行业的最新趋势、最佳实践和深度分析，帮助 HR 和培训负责人做出更好的决策。'
+  }, [searchQuery, selectedCategory, filteredPosts.length])
+
   return (
     <div>
       <PageHead
-        title="行业洞察 - TrainHub | 企业培训行业趋势与最佳实践"
-        description="企业培训行业的最新趋势、最佳实践和深度分析，帮助 HR 和培训负责人做出更好的决策。"
+        title={seoTitle}
+        description={seoDesc}
         path="/blog"
       />
       {/* 页面头部 */}
