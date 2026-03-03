@@ -49,6 +49,7 @@ jobs:
           force_orphan: true
           commit_message: 'deploy: ${{ github.sha }}'
 
-      - name: Submit to IndexNow & Google
+      - name: Submit to IndexNow
         run: node scripts/submit-indexnow.mjs
+        timeout-minutes: 3
         continue-on-error: true

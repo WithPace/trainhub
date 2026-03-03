@@ -125,8 +125,34 @@ async function submitBatch(engine, batch) {
   }
 }
 
+/** 等待 GitHub Pages 部署生效（验证密钥文件可访问） */
+async function waitForDeployment(maxRetries = 6, intervalMs = 15000) {
+  console.log(`  Waiting for GitHub Pages deployment (key: ${KEY_LOCATION})...`)
+  for (let i = 1; i <= maxRetries; i++) {
+    try {
+      const res = await fetch(KEY_LOCATION)
+      if (res.ok) {
+        const text = await res.text()
+        if (text.trim() === KEY) {
+          console.log(`  OK  Key file verified (attempt ${i}/${maxRetries})`)
+          return true
+        }
+      }
+      console.log(`  ...  Attempt ${i}/${maxRetries}: not ready yet (${res.status})`)
+    } catch (err) {
+      console.log(`  ...  Attempt ${i}/${maxRetries}: ${err.message}`)
+    }
+    if (i < maxRetries) await new Promise(r => setTimeout(r, intervalMs))
+  }
+  console.log('  WARN  Key file not accessible after retries, submitting anyway')
+  return false
+}
+
 async function main() {
   console.log(`\n  IndexNow Submission — ${urls.length} URLs\n`)
+
+  // 等待 GitHub Pages 部署生效，避免竞态条件导致 403
+  await waitForDeployment()
 
   // IndexNow 单次最多提交 10000 个 URL，我们远不到上限
   for (const engine of ENGINES) {
