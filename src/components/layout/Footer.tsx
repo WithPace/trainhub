@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap } from 'lucide-react'
+import { GraduationCap, Rss } from 'lucide-react'
 
 const topicLinks = [
   { name: '领导力培训', slug: 'leadership' },
@@ -83,10 +83,15 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* 免费工具 */}
+          {/* 工具与资源 */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">免费工具</h3>
+            <h3 className="text-sm font-semibold text-gray-900">工具与资源</h3>
             <ul className="mt-3 space-y-2">
+              <li>
+                <Link to="/toolkit" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                  培训决策工具包 ¥99
+                </Link>
+              </li>
               <li>
                 <Link to="/assessment" className="text-sm text-gray-500 hover:text-blue-600">
                   培训需求诊断
@@ -106,6 +111,12 @@ export default function Footer() {
                 <Link to="/match" className="text-sm text-gray-500 hover:text-blue-600">
                   智能匹配培训师
                 </Link>
+              </li>
+              <li>
+                <a href="/trainhub/feed.xml" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-orange-500" target="_blank" rel="noopener noreferrer">
+                  <Rss className="h-3.5 w-3.5" />
+                  RSS 订阅
+                </a>
               </li>
             </ul>
           </div>

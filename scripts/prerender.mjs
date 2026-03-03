@@ -117,6 +117,15 @@ const routes = [
   // 免费工具 (2)
   '/tools/budget-calculator',
   '/tools/roi-calculator',
+  // 付费工具包
+  '/toolkit',
+  // 工具包模板详情 (6)
+  '/toolkit/needs-analysis',
+  '/toolkit/annual-plan',
+  '/toolkit/effectiveness-eval',
+  '/toolkit/budget-plan',
+  '/toolkit/procurement',
+  '/toolkit/trends-report-2026',
 ]
 
 /** 简易静态文件服务器 */

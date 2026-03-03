@@ -99,6 +99,14 @@ function generateSitemap() {
   entries.push(urlEntry(`${BASE_URL}/tools/budget-calculator`, TODAY, 'monthly', '0.8'))
   entries.push(urlEntry(`${BASE_URL}/tools/roi-calculator`, TODAY, 'monthly', '0.8'))
 
+  // ── 付费工具包 ──
+  entries.push(urlEntry(`${BASE_URL}/toolkit`, TODAY, 'weekly', '0.9'))
+  // ── 工具包模板详情 (6) ──
+  const toolkitSlugs = ['needs-analysis', 'annual-plan', 'effectiveness-eval', 'budget-plan', 'procurement', 'trends-report-2026']
+  for (const slug of toolkitSlugs) {
+    entries.push(urlEntry(`${BASE_URL}/toolkit/${slug}`, TODAY, 'weekly', '0.8'))
+  }
+
   // 组装完整 XML
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',

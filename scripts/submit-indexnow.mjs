@@ -3,92 +3,81 @@
  * submit-indexnow.mjs — 部署后自动向 IndexNow 提交 URL
  * 支持 Bing、Yandex、Seznam、Naver 等所有 IndexNow 兼容引擎
  *
+ * 动态从 blog-meta.ts 读取文章列表，避免硬编码遗漏
+ *
  * 用法: node scripts/submit-indexnow.mjs
  */
+
+import { readFileSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const ROOT = join(__dirname, '..')
+const BLOG_META_PATH = join(ROOT, 'src/data/blog-meta.ts')
 
 const SITE_URL = 'https://withpace.github.io'
 const KEY = '8a831d8d3a0448a3a7a9c66023a176c6'
 const KEY_LOCATION = `${SITE_URL}/trainhub/${KEY}.txt`
 
-// 所有可索引的 URL（与 sitemap.xml 保持一致）
-const urls = [
-  '/trainhub/',
-  '/trainhub/trainers',
-  '/trainhub/courses',
-  '/trainhub/blog',
-  '/trainhub/join',
-  '/trainhub/faq',
-  '/trainhub/match',
-  '/trainhub/about',
-  '/trainhub/assessment',
-  '/trainhub/tools/budget-calculator',
-  '/trainhub/tools/roi-calculator',
-  // 分类专题 (6)
-  '/trainhub/topics/leadership',
-  '/trainhub/topics/sales',
-  '/trainhub/topics/digital',
-  '/trainhub/topics/hr',
-  '/trainhub/topics/finance',
-  '/trainhub/topics/communication',
-  // 培训师详情 (15)
-  ...Array.from({ length: 15 }, (_, i) => `/trainhub/trainers/${i + 1}`),
-  // 课程详情 (17)
-  ...Array.from({ length: 17 }, (_, i) => `/trainhub/courses/${i + 1}`),
-  // 博客文章 (53)
-  '/trainhub/blog/enterprise-training-industry-disruption',
-  '/trainhub/blog/how-to-choose-ai-training-course',
-  '/trainhub/blog/leadership-training-trends-2026',
-  '/trainhub/blog/how-to-evaluate-trainer-quality',
-  '/trainhub/blog/training-roi-measurement',
-  '/trainhub/blog/freelance-trainer-pricing-guide',
-  '/trainhub/blog/new-manager-first-90-days',
-  '/trainhub/blog/enterprise-training-budget-planning-2026',
-  '/trainhub/blog/training-needs-analysis-methods',
-  '/trainhub/blog/digital-training-trends-2026',
-  '/trainhub/blog/annual-training-plan-design',
-  '/trainhub/blog/online-vs-offline-training',
-  '/trainhub/blog/training-effectiveness-evaluation',
-  '/trainhub/blog/how-to-choose-training-provider',
-  '/trainhub/blog/new-employee-onboarding-training-guide',
-  '/trainhub/blog/how-to-build-internal-training-system',
-  '/trainhub/blog/middle-management-training-courses',
-  '/trainhub/blog/team-building-training-program',
-  '/trainhub/blog/sales-team-training-program',
-  '/trainhub/blog/how-to-choose-training-platform',
-  '/trainhub/blog/manufacturing-training-program-design',
-  '/trainhub/blog/corporate-learning-map-guide',
-  '/trainhub/blog/why-training-fails-solutions',
-  '/trainhub/blog/finance-industry-training-program',
-  '/trainhub/blog/healthcare-training-compliance-guide',
-  '/trainhub/blog/annual-training-summary-report-template',
-  '/trainhub/blog/retail-industry-training-program',
-  '/trainhub/blog/training-needs-survey-template',
-  '/trainhub/blog/it-industry-tech-training-program',
-  '/trainhub/blog/education-industry-training-program',
-  '/trainhub/blog/trainer-evaluation-form-template',
-  '/trainhub/blog/logistics-industry-training-program',
-  '/trainhub/blog/energy-industry-training-program',
-  '/trainhub/blog/training-effectiveness-tracking-template',
-  '/trainhub/blog/catering-industry-training-program',
-  '/trainhub/blog/construction-industry-training-program',
-  '/trainhub/blog/training-project-proposal-template',
-  '/trainhub/blog/internal-trainer-development-system',
-  '/trainhub/blog/china-training-market-trends-2026',
-  '/trainhub/blog/training-contract-agreement-template',
-  '/trainhub/blog/high-potential-talent-development-program',
-  '/trainhub/blog/top-training-course-directions-2026',
-  '/trainhub/blog/trainer-personal-brand-building-guide',
-  '/trainhub/blog/training-supplier-management-strategy',
-  '/trainhub/blog/hotel-industry-training-program',
-  '/trainhub/blog/enterprise-digital-transformation-training-guide',
-  '/trainhub/blog/trainer-invitation-letter-template',
-  '/trainhub/blog/automotive-industry-training-program',
-  '/trainhub/blog/training-budget-application-template',
-  '/trainhub/blog/training-full-process-management-guide',
-  '/trainhub/blog/real-estate-industry-training-program',
-  '/trainhub/blog/training-course-development-guide',
-  '/trainhub/blog/cross-department-collaboration-training',
-].map(path => `${SITE_URL}${path}`)
+/**
+ * 从 blog-meta.ts 提取所有文章 id
+ * 用正则解析 TS 源码，避免依赖 tsx/ts-node
+ */
+function parseBlogIds() {
+  const source = readFileSync(BLOG_META_PATH, 'utf-8')
+  const idRegex = /id:\s*'([^']+)'/g
+  return [...source.matchAll(idRegex)].map(m => m[1])
+}
+
+/** 构建所有可索引 URL（与 sitemap.xml 保持一致） */
+function buildUrlList() {
+  const blogIds = parseBlogIds()
+
+  const urls = [
+    // 核心页面
+    '/trainhub/',
+    '/trainhub/trainers',
+    '/trainhub/courses',
+    '/trainhub/blog',
+    '/trainhub/join',
+    '/trainhub/faq',
+    '/trainhub/match',
+    '/trainhub/about',
+    '/trainhub/assessment',
+    '/trainhub/tools/budget-calculator',
+    '/trainhub/tools/roi-calculator',
+    // 付费工具包
+    '/trainhub/toolkit',
+    // 工具包模板详情 (6)
+    '/trainhub/toolkit/needs-analysis',
+    '/trainhub/toolkit/annual-plan',
+    '/trainhub/toolkit/effectiveness-eval',
+    '/trainhub/toolkit/budget-plan',
+    '/trainhub/toolkit/procurement',
+    '/trainhub/toolkit/trends-report-2026',
+    // 分类专题 (9)
+    '/trainhub/topics/leadership',
+    '/trainhub/topics/sales',
+    '/trainhub/topics/digital',
+    '/trainhub/topics/hr',
+    '/trainhub/topics/finance',
+    '/trainhub/topics/communication',
+    '/trainhub/topics/project-management',
+    '/trainhub/topics/culture',
+    '/trainhub/topics/compliance',
+    // 培训师详情 (18)
+    ...Array.from({ length: 18 }, (_, i) => `/trainhub/trainers/${i + 1}`),
+    // 课程详情 (23)
+    ...Array.from({ length: 23 }, (_, i) => `/trainhub/courses/${i + 1}`),
+    // 博客文章（动态读取）
+    ...blogIds.map(id => `/trainhub/blog/${id}`),
+    // RSS feed
+    '/trainhub/feed.xml',
+  ]
+
+  return urls.map(path => `${SITE_URL}${path}`)
+}
 
 // IndexNow 支持的搜索引擎 API 端点
 const ENGINES = [
@@ -149,6 +138,7 @@ async function waitForDeployment(maxRetries = 6, intervalMs = 15000) {
 }
 
 async function main() {
+  const urls = buildUrlList()
   console.log(`\n  IndexNow Submission — ${urls.length} URLs\n`)
 
   // 等待 GitHub Pages 部署生效，避免竞态条件导致 403
@@ -163,6 +153,7 @@ async function main() {
   // Google 收录需通过 Search Console 提交 sitemap
   console.log('  INFO Google sitemap ping — skipped (endpoint deprecated since 2024, use Search Console)')
   console.log(`       Sitemap: ${SITE_URL}/trainhub/sitemap.xml`)
+  console.log(`       RSS Feed: ${SITE_URL}/trainhub/feed.xml`)
 
   console.log('\n  Done.\n')
 }

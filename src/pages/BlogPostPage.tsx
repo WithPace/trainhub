@@ -11,6 +11,7 @@ import { getCourses } from '@/services/api'
 import type { Course } from '@/types'
 import { injectInternalLinks } from '@/lib/auto-link'
 import ShareButtons from '@/components/ui/ShareButtons'
+import BlogToolkitCTA from '@/components/ui/BlogToolkitCTA'
 
 /** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
 function renderTextWithLinks(text: string): React.ReactNode {
@@ -417,6 +418,9 @@ export default function BlogPostPage() {
               ) : (
                 <ContentSkeleton />
               )}
+
+              {/* 工具包推广 CTA — 文章读完后引导转化 */}
+              {content && <BlogToolkitCTA category={meta.category} />}
 
               {/* 文章底部分享栏 */}
               {content && (
