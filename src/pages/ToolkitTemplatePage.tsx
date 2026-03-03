@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import PageHead from '@/components/seo/PageHead'
 import { JsonLd } from '@/components/seo/JsonLd'
+import ToolkitEmailForm from '@/components/ui/ToolkitEmailForm'
 import { getToolkitTemplateById } from '@/data/toolkit-templates'
 import type { ToolkitTemplate, ToolkitSection } from '@/data/toolkit-templates'
 import { getBlogPostMetaBySlug } from '@/data/blog-meta'
@@ -407,21 +408,10 @@ export default function ToolkitTemplatePage() {
         </div>
       </div>
 
-      {/* 底部 CTA */}
-      <section className="print:hidden border-t border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-xl font-bold text-gray-900">
-            探索更多企业培训工具
-          </h2>
-          <p className="mt-2 text-sm text-gray-500">
-            工具包包含 6 份专业模板和报告，覆盖培训管理全流程
-          </p>
-          <Link
-            to="/toolkit"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-          >
-            查看工具包总览 <ArrowRight className="h-4 w-4" />
-          </Link>
+      {/* 底部邮箱收集 CTA */}
+      <section className="print:hidden bg-gradient-to-br from-blue-600 to-indigo-700 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-xl text-center">
+          <ToolkitEmailForm source={`toolkit-template-${slug}`} compact />
         </div>
       </section>
 
