@@ -121,6 +121,13 @@ const routes = [
   '/blog/kirkpatrick-model-practice',
   '/blog/training-roi-calculation',
   '/blog/training-procurement-bidding-process',
+  // Cycle #101: 6 篇长尾 SEO 文章（培训管理实操系列）
+  '/blog/training-effectiveness-issues',
+  '/blog/training-satisfaction-survey-design',
+  '/blog/internal-trainer-database-guide',
+  '/blog/training-project-review-guide',
+  '/blog/one-person-training-department',
+  '/blog/training-vendor-evaluation',
   // 免费工具 (2)
   '/tools/budget-calculator',
   '/tools/roi-calculator',

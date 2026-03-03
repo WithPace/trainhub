@@ -5,7 +5,7 @@
     <link>https://withpace.github.io/trainhub</link>
     <description>企业培训师选择、培训管理、行业趋势等专业内容，助力 HR 和培训经理做出更好的培训决策。</description>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 03 Mar 2026 10:31:09 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 03 Mar 2026 11:31:49 GMT</lastBuildDate>
     <atom:link href="https://withpace.github.io/trainhub/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://withpace.github.io/trainhub/og-image.webp</url>
@@ -289,6 +289,114 @@
       <description>互联网公司的培训体系与传统行业截然不同：技术迭代快、组织扁平化、OKR驱动、远程办公常态化。本文覆盖技术研发、产品经理、运营增长、管理层四大岗位线，对比不同融资阶段的培训策略差异，解析BAT/TMD等大厂培训体系，帮助互联网HR搭建真正适配业务节奏的人才发展体系。</description>
       <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
       <category>行业方案</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训需求分析怎么做？5步法帮你精准定位培训方向</title>
+      <link>https://withpace.github.io/trainhub/blog/training-needs-analysis-guide</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-needs-analysis-guide</guid>
+      <description>培训需求分析是培训工作的起点，但80%的企业要么跳过这一步，要么做得太粗糙。本文提供一套5步法框架：从战略解码→岗位画像→能力差距→优先级排序→输出需求报告，帮HR在花钱之前精准定位培训方向，附可直接使用的培训需求分析模板。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>实操指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>年度培训计划模板：可直接套用的完整框架与填写指南</title>
+      <link>https://withpace.github.io/trainhub/blog/annual-training-plan-template</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/annual-training-plan-template</guid>
+      <description>每年Q4做年度培训计划，多数HR要么从零开始痛苦写，要么复制去年的改改数字。本文提供一套经过验证的年度培训计划完整框架，包含目标设定、课程排期、预算分配、KPI指标4大模块，附填写说明和3个不同规模企业的范例。可直接套用，让你的培训计划专业且落地。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>实操指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训预算被砍怎么办？6个实战优化策略让每分钱花在刀刃上</title>
+      <link>https://withpace.github.io/trainhub/blog/training-budget-optimization</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-budget-optimization</guid>
+      <description>培训预算年年被砍是HR最头疼的问题之一。但与其抱怨预算不够，不如学会用更少的钱办更多的事。本文提供6个经过验证的培训预算优化策略：从内训师替代外训、混合式学习降本、供应商谈判技巧到ROI导向的资源分配，帮你在预算收紧时依然保证培训效果。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训管理</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>柯氏四级评估模型实战指南：一个完整案例教你从L1做到L4</title>
+      <link>https://withpace.github.io/trainhub/blog/kirkpatrick-model-practice</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/kirkpatrick-model-practice</guid>
+      <description>柯氏四级评估模型人人都知道，但真正做到L3、L4的企业不到10%。问题不是模型太难，而是缺乏可参考的实操案例。本文以一个真实的中层管理者领导力培训项目为例，完整展示从L1满意度调查到L4 ROI计算的全流程，附每一步的工具、模板和数据分析方法。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训管理</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训ROI计算公式与案例：用3个数字说服老板继续投培训</title>
+      <link>https://withpace.github.io/trainhub/blog/training-roi-calculation</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-roi-calculation</guid>
+      <description>老板问&quot;培训到底值不值&quot;，你能用数字回答吗？培训ROI计算不是学术练习，而是培训管理者的核心武器。本文把看似复杂的ROI计算拆解为3个关键数字：培训成本、效果货币化价值和净回报率，附4种不同类型培训的ROI计算案例，让你用数据为培训预算保驾护航。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训管理</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训采购招标全流程指南：从立项到签约的8个关键步骤</title>
+      <link>https://withpace.github.io/trainhub/blog/training-procurement-bidding-process</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-procurement-bidding-process</guid>
+      <description>培训采购不是&quot;找个讲师就行&quot;——从需求确认、供应商筛选、方案评审到合同签订，每一步都有坑。多数企业的培训采购既不规范也不高效，导致要么买贵了，要么选错了。本文提供一套标准化的培训采购招标8步流程，附每步的checklist、模板和注意事项，帮采购新手也能做出专业的培训采购决策。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>采购指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训效果不好怎么办？深度解析10个常见原因及对策</title>
+      <link>https://withpace.github.io/trainhub/blog/training-effectiveness-issues</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-effectiveness-issues</guid>
+      <description>花了30万做培训，学员反馈&quot;挺好的&quot;，但三个月后一切照旧。培训效果差不是偶然，背后往往是需求分析缺失、内容脱节、形式单一、缺乏转化机制等系统性问题。本文逐一拆解10个最常见原因并给出可落地的对策，附自检清单，帮你找到培训效果不好的真正症结。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训管理</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训满意度问卷设计指南：从零搭建到数据分析的完整方法</title>
+      <link>https://withpace.github.io/trainhub/blog/training-satisfaction-survey-design</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-satisfaction-survey-design</guid>
+      <description>培训结束发问卷，4.5分满意度，三个月后一切照旧——多数企业的满意度调查沦为&quot;走过场&quot;。问题不在于做不做问卷，而在于怎么设计问卷。本文从评估目的、维度划分、题目设计、量表选择到数据分析，提供一套完整的培训满意度问卷设计方法论，帮你让L1评估真正产生价值。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>实操指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>企业内部培训师资库建设指南：从0到1的5个步骤</title>
+      <link>https://withpace.github.io/trainhub/blog/internal-trainer-database-guide</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/internal-trainer-database-guide</guid>
+      <description>HR急着找培训师，翻遍通讯录和朋友圈，效率低、信息散、质量不可控。一套系统化的师资库能让企业告别临时抱佛脚，实现培训资源的可视化、可检索、可评估。本文提供从分类标准、档案模板、资源收集、评估分级到日常运营的5步建设法，附不同规模企业的实操策略。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训管理</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训项目复盘实操手册：用GRAI模型做一次有效的培训复盘</title>
+      <link>https://withpace.github.io/trainhub/blog/training-project-review-guide</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-project-review-guide</guid>
+      <description>培训结束后匆匆写个总结，下次项目又踩同样的坑——这是多数企业培训管理的常态。真正有效的复盘不是写流水账，而是用结构化方法提炼经验、形成规则。本文详解GRAI复盘模型的四步操作法，附完整的复盘会议程模板、引导技巧和产出物模板，帮你让每次培训都成为下次做得更好的起点。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>实操指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>一人培训部生存指南：用最小资源搭建培训体系的6个步骤</title>
+      <link>https://withpace.github.io/trainhub/blog/one-person-training-department</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/one-person-training-department</guid>
+      <description>入职第一天发现自己就是整个培训部门——没团队、没预算、没体系。但一人培训部不是绝路，反而可能是最高效的组织形态。本文提供6步搭建法，从快速需求诊断到让业务部门成为同盟军，帮你用最小资源建起一套能跑起来的培训体系，附年度时间线模板和3个成功案例。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>实操指南</category>
+      <author>TrainHub 研究院</author>
+    </item>
+    <item>
+      <title>培训采购避坑清单：评估外部培训供应商的8个关键维度</title>
+      <link>https://withpace.github.io/trainhub/blog/training-vendor-evaluation</link>
+      <guid isPermaLink="true">https://withpace.github.io/trainhub/blog/training-vendor-evaluation</guid>
+      <description>花了3万请来的培训机构，课上完了发现货不对板——讲师临时换人、内容全是通用模板、课后没有任何跟进。培训采购踩坑的根源是评估维度太单一。本文提供一套8维度评估体系，从资质背景到口碑评价，附供应商评估打分表和合同签约注意事项，帮你每一分预算都花得明白。</description>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate>
+      <category>培训采购</category>
       <author>TrainHub 研究院</author>
     </item>
     <item>
