@@ -12,6 +12,7 @@ import type { Course } from '@/types'
 import { injectInternalLinks } from '@/lib/auto-link'
 import ShareButtons from '@/components/ui/ShareButtons'
 import BlogToolkitCTA from '@/components/ui/BlogToolkitCTA'
+import SidebarToolkitCTA from '@/components/ui/SidebarToolkitCTA'
 
 /** 解析文本中的 markdown 链接 [text](/url)，返回 React 节点 */
 function renderTextWithLinks(text: string): React.ReactNode {
@@ -464,6 +465,9 @@ export default function BlogPostPage() {
                   ))}
                 </div>
               </div>
+
+              {/* 工具包推广 CTA */}
+              <SidebarToolkitCTA />
 
               {/* 需求诊断 CTA */}
               <div className="rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-5 text-white">

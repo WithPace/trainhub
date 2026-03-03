@@ -8,6 +8,7 @@ import CategoriesSection from '@/components/home/CategoriesSection'
 import FeaturedTrainersSection from '@/components/home/FeaturedTrainersSection'
 import FeaturedCoursesSection from '@/components/home/FeaturedCoursesSection'
 import LatestPostsSection from '@/components/home/LatestPostsSection'
+import ToolkitPromoSection from '@/components/home/ToolkitPromoSection'
 import WhyTrainHubSection from '@/components/home/WhyTrainHubSection'
 import HowItWorksSection from '@/components/home/HowItWorksSection'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
@@ -36,6 +37,7 @@ export default function HomePage() {
       <FeaturedTrainersSection trainers={featuredTrainers} />
       <FeaturedCoursesSection courses={featuredCourses} />
       <LatestPostsSection posts={latestPosts} />
+      <ToolkitPromoSection />
       <WhyTrainHubSection />
       <HowItWorksSection />
       <TestimonialsSection />
