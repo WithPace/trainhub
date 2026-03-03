@@ -18,6 +18,9 @@ const LINK_RULES: LinkRule[] = [
   { keyword: '人力资源培训', url: '/topics/hr' },
   { keyword: '财务管理培训', url: '/topics/finance' },
   { keyword: '沟通表达培训', url: '/topics/communication' },
+  { keyword: '项目管理培训', url: '/topics/project-management' },
+  { keyword: '企业文化培训', url: '/topics/culture' },
+  { keyword: '合规培训', url: '/topics/compliance' },
   // 核心功能页
   { keyword: '培训需求诊断', url: '/assessment' },
   { keyword: '培训需求自评', url: '/assessment' },
@@ -35,6 +38,14 @@ const LINK_RULES: LinkRule[] = [
   { keyword: '人力资源', url: '/topics/hr' },
   { keyword: '财务管理', url: '/topics/finance' },
   { keyword: '沟通表达', url: '/topics/communication' },
+  { keyword: '项目管理', url: '/topics/project-management' },
+  { keyword: '企业文化', url: '/topics/culture' },
+  { keyword: '合规风控', url: '/topics/compliance' },
+  { keyword: 'PMP认证', url: '/topics/project-management' },
+  { keyword: 'PMO', url: '/topics/project-management' },
+  { keyword: '文化变革', url: '/topics/culture' },
+  { keyword: '数据合规', url: '/topics/compliance' },
+  { keyword: '反腐败', url: '/topics/compliance' },
 ].sort((a, b) => b.keyword.length - a.keyword.length) // 长关键词优先匹配
 
 /**
