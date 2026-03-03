@@ -17,6 +17,9 @@ const heroBgMap: Record<string, string> = {
   hr: 'from-teal-600 to-teal-800',
   finance: 'from-emerald-600 to-emerald-800',
   communication: 'from-pink-500 to-pink-700',
+  'project-management': 'from-amber-600 to-amber-800',
+  culture: 'from-cyan-600 to-cyan-800',
+  compliance: 'from-slate-600 to-slate-800',
 }
 
 // FAQ 折叠项组件

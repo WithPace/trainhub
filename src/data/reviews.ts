@@ -98,6 +98,20 @@ export const reviews: Review[] = [
   // 许文博 (id: 15)
   { id: 48, trainer_id: 15, course_id: 17, author: '卢CEO', company: '某科技创业公司', role: 'CEO', rating: 5, content: '许老师的教练式领导力课改变了我的管理方式。以前什么都亲力亲为，现在学会了用提问代替指令，团队反而更有主动性了。', date: '2026-02-15' },
   { id: 49, trainer_id: 15, course_id: 17, author: '段VP', company: '某上市地产公司', role: '人力资源VP', rating: 5, content: 'GROW教练对话模型特别实用，我们把它融入了季度绩效面谈流程。高管反馈"终于知道怎么跟下属谈发展了"。', date: '2026-01-20' },
+
+  // ── 第四批评价：新增培训师 ──
+
+  // 韩志强 (id: 16)
+  { id: 50, trainer_id: 16, course_id: 18, author: '邓经理', company: '某IT系统集成商', role: '项目管理部经理', rating: 5, content: '韩老师的PMP课程最大优点是接地气。不是照搬PMBOK理论，而是结合中国企业实际讲解如何落地。WBS分解和风险管理两个模块对我帮助最大。', date: '2026-02-18' },
+  { id: 51, trainer_id: 16, course_id: 19, author: '曹总监', company: '某中型制造企业', role: '运营总监', rating: 5, content: '我们公司正在筹建PMO，韩老师的课帮我们理清了PMO定位和建设路径。特别是"从成本中心到利润中心"的思路，让老板也认可了PMO的价值。', date: '2026-01-25' },
+
+  // 宋雨桐 (id: 17)
+  { id: 52, trainer_id: 17, course_id: 20, author: '秦HRD', company: '某快速成长互联网公司', role: 'HRD', rating: 5, content: '宋老师的文化诊断工作坊让我们第一次用数据看清了公司的文化现状。OCAI评估结果出来后，管理层终于达成了文化变革的共识。', date: '2026-02-22' },
+  { id: 53, trainer_id: 17, course_id: 21, author: '卢经理', company: '某连锁品牌企业', role: '培训经理', rating: 4, content: '新员工文化融入营效果超出预期。以前新员工3个月还找不到归属感，现在1个月就能融入团队。试用期留存率提升了20%。', date: '2026-02-08' },
+
+  // 郑凯文 (id: 18)
+  { id: 54, trainer_id: 18, course_id: 22, author: '范法务总监', company: '某跨境电商公司', role: '法务总监', rating: 5, content: '郑老师既懂法律又懂业务，讲数据合规不是照搬法条，而是结合真实执法案例讲解企业如何避坑。DPIA实操环节特别实用。', date: '2026-02-25' },
+  { id: 55, trainer_id: 18, course_id: 23, author: '苗经理', company: '某医疗器械公司', role: '合规经理', rating: 5, content: '反腐败培训以前总被业务部门吐槽"走过场"，郑老师用大量真实案例和场景模拟让培训变得有用。销售团队反馈"终于知道什么能做什么不能做了"。', date: '2026-02-12' },
 ]
 
 // 根据培训师 ID 获取评价

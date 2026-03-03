@@ -29,17 +29,20 @@ const routes = [
   '/match',
   '/about',
   '/assessment',
-  // 培训师详情 (15)
-  ...Array.from({ length: 15 }, (_, i) => `/trainers/${i + 1}`),
-  // 课程详情 (17)
-  ...Array.from({ length: 17 }, (_, i) => `/courses/${i + 1}`),
-  // 分类专题 (6)
+  // 培训师详情 (18)
+  ...Array.from({ length: 18 }, (_, i) => `/trainers/${i + 1}`),
+  // 课程详情 (23)
+  ...Array.from({ length: 23 }, (_, i) => `/courses/${i + 1}`),
+  // 分类专题 (9)
   '/topics/leadership',
   '/topics/sales',
   '/topics/digital',
   '/topics/hr',
   '/topics/finance',
   '/topics/communication',
+  '/topics/project-management',
+  '/topics/culture',
+  '/topics/compliance',
   // 博客文章 (50)
   '/blog/enterprise-training-industry-disruption',
   '/blog/how-to-choose-ai-training-course',
