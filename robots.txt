@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block mock data pages (deprecated marketplace content)
+Disallow: /trainhub/trainers/
+Disallow: /trainhub/courses/
+Disallow: /trainhub/join
+
+Sitemap: https://withpace.github.io/trainhub/sitemap.xml

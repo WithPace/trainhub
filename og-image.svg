@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4338ca;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" rx="0"/>
+  <!-- 装饰圆 -->
+  <circle cx="100" cy="530" r="200" fill="#3b82f6" opacity="0.3"/>
+  <circle cx="1100" cy="100" r="150" fill="#6366f1" opacity="0.25"/>
+  <!-- 品牌名 -->
+  <text x="600" y="220" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">TrainHub</text>
+  <!-- 标语 -->
+  <text x="600" y="310" font-family="system-ui,-apple-system,sans-serif" font-size="36" fill="#bfdbfe" text-anchor="middle">企业培训师技能市场</text>
+  <!-- 特色 -->
+  <text x="600" y="400" font-family="system-ui,-apple-system,sans-serif" font-size="24" fill="#93c5fd" text-anchor="middle">方案分享 · 师资分享 · 课程大纲分享</text>
+  <!-- 数据 -->
+  <text x="300" y="510" font-family="system-ui,-apple-system,sans-serif" font-size="20" fill="#dbeafe" text-anchor="middle">15+ 认证培训师</text>
+  <text x="600" y="510" font-family="system-ui,-apple-system,sans-serif" font-size="20" fill="#dbeafe" text-anchor="middle">17+ 精选课程</text>
+  <text x="900" y="510" font-family="system-ui,-apple-system,sans-serif" font-size="20" fill="#dbeafe" text-anchor="middle">6 大培训方向</text>
+</svg>
