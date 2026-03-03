@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { BarChart3, ArrowRight, RotateCcw, DollarSign, TrendingUp, Clock, Info } from 'lucide-react'
+import { BarChart3, ArrowRight, RotateCcw, DollarSign, TrendingUp, Info } from 'lucide-react'
 import PageHead from '@/components/seo/PageHead'
 import { JsonLd } from '@/components/seo/JsonLd'
 

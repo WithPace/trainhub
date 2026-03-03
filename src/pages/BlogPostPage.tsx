@@ -37,7 +37,7 @@ function headingToId(text: string): string {
 }
 
 /** 从内容块中提取 TOC 条目 */
-export function extractTocItems(blocks: ContentBlock[]): TocItem[] {
+function extractTocItems(blocks: ContentBlock[]): TocItem[] {
   return blocks
     .filter(b => b.type === 'heading2' || b.type === 'heading3')
     .map(b => ({

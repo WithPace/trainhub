@@ -10,6 +10,71 @@
 
 ---
 
+## 7-Day Completion Sprint
+
+> 目标：7 天内把项目从“可演示”推进到“可持续运营”，优先完成工程基线、询盘闭环、运营留痕、索引执行。
+
+### Day 1：清理工程阻塞
+
+- 动作：修复 `lint` 错误与 warning，确保 `npm run lint` 通过
+- 命令：
+  - `npm run lint`
+  - `npm run build`
+- 验收标准：两条命令都通过，且无 ESLint error
+- 回滚方式：`git restore <modified-files>` 或回退到前一提交
+
+### Day 2：建立发布闸门
+
+- 动作：新增 `qa:release`（统一执行 `lint + build`），并接入 CI
+- 命令：
+  - `npm run qa:release`
+  - 检查 workflow 是否使用 `qa:release`
+- 验收标准：本地 `qa:release` 通过，CI 配置命中
+- 回滚方式：移除新增脚本并恢复 workflow 原构建步骤
+
+### Day 3：询盘提交模式显式化
+
+- 动作：询盘返回 `api / external-form / local-fallback`，前端按模式提示
+- 命令：
+  - `npm run lint`
+  - `npm run build`
+- 验收标准：编译通过，且本地兜底模式有明确文案
+- 回滚方式：恢复 `src/services/api.ts` 和 `InquiryModal.tsx` 到前一版本
+
+### Day 4：部署环境变量接入
+
+- 动作：在 GitHub Actions 发布步骤注入 `VITE_FORM_ENDPOINT`
+- 命令：
+  - 检查 `.github/workflows/deploy-pages.yml` 中 `env.VITE_FORM_ENDPOINT`
+  - 手动触发一次 workflow（如有权限）
+- 验收标准：工作流读取到 Secret 且构建不报缺失
+- 回滚方式：移除该 env 注入，恢复为纯本地兜底模式
+
+### Day 5：运营周报基线
+
+- 动作：建立 `docs/operations/weekly/` 与当周周报 `2026-W10.md`
+- 命令：
+  - `rg "docs/operations/weekly|2026-W10" docs/operations -n`
+- 验收标准：周报目录、README、首周报三项齐全并可检索
+- 回滚方式：删除新增周报文件并恢复指标文档索引
+
+### Day 6：索引执行留痕
+
+- 动作：创建索引提交执行日志，记录 GSC/Bing 每个动作的证据字段
+- 命令：
+  - `rg "Google Search Console|Bing Webmaster|执行人|截图|结果" docs/research/indexing-submission-log-2026-03-03.md -n`
+- 验收标准：日志包含任务清单、时间戳、截图路径、结果链接字段
+- 回滚方式：删除日志文件并移除审计文档中的引用
+
+### Day 7：周复盘与下周计划
+
+- 动作：复盘 7 天执行结果，更新下周优先级与量化目标
+- 命令：
+  - `npm run qa:release`
+  - 更新并检查 `docs/operations/weekly/2026-W10.md`
+- 验收标准：发布闸门通过，周报含“已完成/未完成/下周动作”
+- 回滚方式：保留工程改动，单独回退周报中的结论性内容
+
 ## 第一部分：供给侧 -- 培训师获取
 
 ### 第 1-7 天：手动招募前 10 位培训师

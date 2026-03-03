@@ -216,16 +216,24 @@ export async function getRelatedCoursesBySpecialties(
 /** 外部表单服务端点（Formspree / Getform / Web3Forms 等） */
 const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || ''
 
+export type InquirySubmitMode = 'api' | 'external-form' | 'local-fallback'
+
+export interface InquirySubmitResult {
+  id: number
+  message: string
+  mode: InquirySubmitMode
+}
+
 export async function submitInquiry(
   inquiry: Inquiry
-): Promise<{ id: number; message: string }> {
+): Promise<InquirySubmitResult> {
   // 优先使用后端 API
   if (useApi) {
     const data = await apiFetch<{ id: number }>('/api/inquiries', {
       method: 'POST',
       body: JSON.stringify(inquiry),
     })
-    return { ...data, message: '咨询已提交，我们会尽快联系您' }
+    return { ...data, message: '咨询已提交，我们会尽快联系您', mode: 'api' }
   }
 
   // 其次使用外部表单服务（适用于 GitHub Pages 等静态部署）
@@ -244,7 +252,7 @@ export async function submitInquiry(
       }),
     })
     if (!res.ok) throw new Error('表单提交失败，请稍后重试')
-    return { id: Date.now(), message: '咨询已提交，我们会尽快联系您' }
+    return { id: Date.now(), message: '咨询已提交，我们会尽快联系您', mode: 'external-form' }
   }
 
   // 兜底：保存到 localStorage + 打开 mailto:
@@ -263,7 +271,11 @@ export async function submitInquiry(
   )
   window.open(`mailto:hi@trainhub.cn?subject=${subject}&body=${body}`, '_blank')
 
-  return { id: Date.now(), message: '咨询已提交，我们会尽快联系您' }
+  return {
+    id: Date.now(),
+    message: '当前为本地兜底提交模式，已尝试打开邮件草稿，请确认后发送',
+    mode: 'local-fallback',
+  }
 }
 
 // ─── Utils ───

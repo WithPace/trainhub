@@ -15,6 +15,7 @@
     "prerender": "node scripts/prerender.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
+    "qa:release": "bash scripts/release-check.sh",
     "preview": "vite preview",
     "deploy:api": "wrangler deploy",
     "deploy:pages": "bash scripts/deploy-pages.sh"

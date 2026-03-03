@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import type { Inquiry } from '@/types'
-import { submitInquiry } from '@/services/api'
+import { submitInquiry, type InquirySubmitMode } from '@/services/api'
 
 interface InquiryModalProps {
   isOpen: boolean
@@ -24,6 +24,8 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [submitMode, setSubmitMode] = useState<InquirySubmitMode | null>(null)
+  const [submitMessage, setSubmitMessage] = useState('')
 
   if (!isOpen) return null
 
@@ -32,7 +34,9 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
     setSubmitting(true)
     setError('')
     try {
-      await submitInquiry(form)
+      const result = await submitInquiry(form)
+      setSubmitMode(result.mode)
+      setSubmitMessage(result.message)
       setSubmitted(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : '提交失败，请稍后重试')
@@ -48,6 +52,8 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
   const handleClose = () => {
     onClose()
     setSubmitted(false)
+    setSubmitMode(null)
+    setSubmitMessage('')
   }
 
   const inputClass = 'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
@@ -75,10 +81,15 @@ export default function InquiryModal({ isOpen, onClose, courseId, trainerId, tit
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <span className="text-3xl">✓</span>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">咨询已记录</h3>
-            <p className="mt-2 text-sm text-gray-500">
-              您的培训需求已保存。您也可以通过以下方式直接联系我们：
-            </p>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {submitMode === 'local-fallback' ? '咨询已保存（本地兜底）' : '咨询已记录'}
+            </h3>
+            <p className="mt-2 text-sm text-gray-500">{submitMessage || '咨询已提交，我们会尽快联系您'}</p>
+            {submitMode === 'local-fallback' && (
+              <p className="mt-2 text-xs text-amber-700">
+                当前未连接在线提交通道，若未弹出邮件客户端，请通过下方联系方式直接联系。
+              </p>
+            )}
             <div className="mt-4 space-y-2 text-sm text-gray-600">
               <p>微信：<span className="font-mono font-semibold">TrainHub2026</span></p>
               <p>电话：<span className="font-semibold">138-0000-1111</span></p>

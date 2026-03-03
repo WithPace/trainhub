@@ -263,6 +263,11 @@
 
 每周五完成，存放在 `docs/operations/weekly/` 目录下。
 
+当前索引：
+
+- `docs/operations/weekly/README.md`
+- `docs/operations/weekly/2026-W10.md`
+
 ```markdown
 # TrainHub 运营周报 - 第 X 周（MM/DD - MM/DD）
 

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Calculator, ArrowRight, Download, RotateCcw, Building2, Users, Target, TrendingUp, Info } from 'lucide-react'
+import { Calculator, ArrowRight, RotateCcw, Building2, Target, TrendingUp, Info } from 'lucide-react'
 import PageHead from '@/components/seo/PageHead'
 import { JsonLd } from '@/components/seo/JsonLd'
 
