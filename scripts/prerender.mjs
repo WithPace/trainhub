@@ -114,6 +114,13 @@ const routes = [
   '/blog/new-employee-culture-integration-strategy',
   '/blog/enterprise-data-compliance-pipl-gdpr-guide',
   '/blog/anti-corruption-training-program-design',
+  // Cycle #100: 6 篇工具包引流 SEO 文章
+  '/blog/training-needs-analysis-guide',
+  '/blog/annual-training-plan-template',
+  '/blog/training-budget-optimization',
+  '/blog/kirkpatrick-model-practice',
+  '/blog/training-roi-calculation',
+  '/blog/training-procurement-bidding-process',
   // 免费工具 (2)
   '/tools/budget-calculator',
   '/tools/roi-calculator',
