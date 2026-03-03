@@ -63,26 +63,13 @@ function generateSitemap() {
 
   // ── 核心页面 ──
   entries.push(urlEntry(`${BASE_URL}/`, TODAY, 'weekly', '1.0'))
-  entries.push(urlEntry(`${BASE_URL}/trainers`, TODAY, 'weekly', '0.8'))
-  entries.push(urlEntry(`${BASE_URL}/courses`, TODAY, 'weekly', '0.8'))
   entries.push(urlEntry(`${BASE_URL}/blog`, TODAY, 'weekly', '0.8'))
 
   // ── 功能页面 ──
-  entries.push(urlEntry(`${BASE_URL}/join`, TODAY, 'monthly', '0.7'))
   entries.push(urlEntry(`${BASE_URL}/faq`, TODAY, 'monthly', '0.6'))
   entries.push(urlEntry(`${BASE_URL}/match`, TODAY, 'monthly', '0.8'))
   entries.push(urlEntry(`${BASE_URL}/about`, TODAY, 'monthly', '0.5'))
   entries.push(urlEntry(`${BASE_URL}/assessment`, TODAY, 'monthly', '0.8'))
-
-  // ── 培训师详情 (18) ──
-  for (let i = 1; i <= 18; i++) {
-    entries.push(urlEntry(`${BASE_URL}/trainers/${i}`, TODAY, 'weekly', '0.6'))
-  }
-
-  // ── 课程详情 (23) ──
-  for (let i = 1; i <= 23; i++) {
-    entries.push(urlEntry(`${BASE_URL}/courses/${i}`, TODAY, 'weekly', '0.6'))
-  }
 
   // ── 分类专题 (9) ──
   const topics = ['leadership', 'sales', 'digital', 'hr', 'finance', 'communication', 'project-management', 'culture', 'compliance']

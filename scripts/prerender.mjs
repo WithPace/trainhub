@@ -21,18 +21,11 @@ const PORT = 4173
 // 所有需要预渲染的路由
 const routes = [
   '/',
-  '/trainers',
-  '/courses',
   '/blog',
-  '/join',
   '/faq',
   '/match',
   '/about',
   '/assessment',
-  // 培训师详情 (18)
-  ...Array.from({ length: 18 }, (_, i) => `/trainers/${i + 1}`),
-  // 课程详情 (23)
-  ...Array.from({ length: 23 }, (_, i) => `/courses/${i + 1}`),
   // 分类专题 (9)
   '/topics/leadership',
   '/topics/sales',

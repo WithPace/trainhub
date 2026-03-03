@@ -22,8 +22,8 @@ export default function Footer() {
               <span className="text-lg font-bold text-gray-900">TrainHub</span>
             </div>
             <p className="mt-3 text-sm text-gray-500">
-              连接企业与优质培训师的专业平台。
-              帮助企业找到最合适的培训解决方案。
+              企业培训决策工具平台。
+              帮助 HR 和培训经理做出更明智的培训投资决策。
             </p>
           </div>
 
@@ -31,21 +31,6 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-gray-900">快速链接</h3>
             <ul className="mt-3 space-y-2">
-              <li>
-                <Link to="/trainers" className="text-sm text-gray-500 hover:text-blue-600">
-                  浏览培训师
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses" className="text-sm text-gray-500 hover:text-blue-600">
-                  浏览课程
-                </Link>
-              </li>
-              <li>
-                <Link to="/match" className="text-sm text-gray-500 hover:text-blue-600">
-                  智能匹配
-                </Link>
-              </li>
               <li>
                 <Link to="/faq" className="text-sm text-gray-500 hover:text-blue-600">
                   常见问题
@@ -124,11 +109,9 @@ export default function Footer() {
           {/* 联系方式 */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900">联系我们</h3>
-            <ul className="mt-3 space-y-2 text-sm text-gray-500">
-              <li>邮箱：contact@trainhub.cn</li>
-              <li>电话：400-888-9999</li>
-              <li>地址：上海市浦东新区</li>
-            </ul>
+            <p className="mt-3 text-sm text-gray-500">
+              反馈建议请发邮件至 feedback@trainhub.tools
+            </p>
           </div>
         </div>
 
