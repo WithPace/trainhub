@@ -73,12 +73,12 @@ export default function BlogToolkitCTA({ category }: { category: string }) {
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <Link
               to={match.slug}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700"
             >
-              查看工具包 <ArrowRight className="h-3.5 w-3.5" />
+              免费领取 <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <span className="text-xs text-gray-500">
-              首发价 ¥99 · 6 份专业模板
+              免费 · 6 份专业模板
             </span>
           </div>
         </div>

@@ -256,6 +256,7 @@ export default function ToolkitTemplatePage() {
         title={`${template.title} - 企业培训工具包 | TrainHub`}
         description={template.subtitle}
         path={`/toolkit/${template.id}`}
+        ogImage={`${BASE_URL}/og/toolkit/${template.id}.webp`}
         type="article"
       />
       <JsonLd

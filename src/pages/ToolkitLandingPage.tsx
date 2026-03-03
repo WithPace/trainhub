@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   FileText, CheckCircle, Download, Calculator, BarChart3,
@@ -55,39 +55,17 @@ const TARGET_USERS = [
   { role: '创业公司 CEO', pain: '想做培训但不知道从哪里开始' },
 ]
 
-const STORAGE_KEY = 'toolkit-waitlist'
-
-function getWaitlistCount(): number {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY)
-    if (!data) return 0
-    const list = JSON.parse(data)
-    return Array.isArray(list) ? list.length : 0
-  } catch {
-    return 0
-  }
-}
-
-function addToWaitlist(email: string): boolean {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY)
-    const list: string[] = data ? JSON.parse(data) : []
-    if (list.includes(email)) return false
-    list.push(email)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
-    return true
-  } catch {
-    return false
-  }
-}
+/** FormSubmit.co 表单提交地址（无需后端，邮件直达） */
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/trainhub.toolkit@gmail.com'
 
 export default function ToolkitLandingPage() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
-  const [waitlistCount] = useState(() => getWaitlistCount())
+  const [submitting, setSubmitting] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
@@ -97,33 +75,59 @@ export default function ToolkitLandingPage() {
       return
     }
 
-    addToWaitlist(trimmed)
-    setSubmitted(true)
+    setSubmitting(true)
 
-    // mailto 兜底：即使没有后端，邮件客户端也能发送
-    const subject = encodeURIComponent('预约：企业培训决策工具包')
-    const body = encodeURIComponent(`我对"企业培训决策工具包"感兴趣，请在上线后通知我。\n\n邮箱: ${trimmed}`)
-    window.open(`mailto:hi@trainhub.cn?subject=${subject}&body=${body}`, '_self')
+    try {
+      const res = await fetch(FORMSUBMIT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          email: trimmed,
+          _subject: '新用户领取工具包',
+          _template: 'table',
+          source: 'toolkit-landing',
+          timestamp: new Date().toISOString(),
+        }),
+      })
+
+      if (res.ok) {
+        setSubmitted(true)
+      } else {
+        setError('提交失败，请稍后重试')
+      }
+    } catch {
+      // 网络错误时回退到 mailto
+      setSubmitted(true)
+      const subject = encodeURIComponent('领取：企业培训决策工具包')
+      const body = encodeURIComponent(`我想免费领取"企业培训决策工具包"。\n\n邮箱: ${trimmed}`)
+      window.open(`mailto:trainhub.toolkit@gmail.com?subject=${subject}&body=${body}`, '_self')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
     <>
       <PageHead
-        title="企业培训决策工具包 — 6 合 1 模板 + 报告 | TrainHub"
-        description="一套完整的企业培训管理工具：需求分析模板、年度计划模板、效果评估工具、预算规划表、招标比价模板、趋势报告。HR 和培训经理的效率利器。"
+        title="免费领取企业培训决策工具包 — 6 合 1 模板 + 报告 | TrainHub"
+        description="免费领取一套完整的企业培训管理工具：需求分析模板、年度计划模板、效果评估工具、预算规划表、招标比价模板、趋势报告。HR 和培训经理的效率利器。"
         path="/toolkit"
+        ogImage="https://withpace.github.io/trainhub/og/toolkit/landing.webp"
       />
       <JsonLd
         data={{
           '@context': 'https://schema.org',
           '@type': 'Product',
           name: '企业培训决策工具包',
-          description: '包含培训需求分析、年度计划、效果评估、预算规划、招标比价、趋势报告的 6 合 1 企业培训管理工具包。',
+          description: '包含培训需求分析、年度计划、效果评估、预算规划、招标比价、趋势报告的 6 合 1 企业培训管理工具包。免费领取。',
           offers: {
             '@type': 'Offer',
-            price: '99',
+            price: '0',
             priceCurrency: 'CNY',
-            availability: 'https://schema.org/PreOrder',
+            availability: 'https://schema.org/InStock',
           },
         }}
       />
@@ -132,8 +136,8 @@ export default function ToolkitLandingPage() {
       <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:py-24 lg:px-8">
           <div className="text-center">
-            <span className="inline-block rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
-              限时预售
+            <span className="inline-block rounded-full bg-green-400/20 px-4 py-1.5 text-sm font-medium text-green-200 backdrop-blur-sm">
+              免费领取
             </span>
             <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
               企业培训决策工具包
@@ -141,18 +145,18 @@ export default function ToolkitLandingPage() {
             <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100 sm:text-xl">
               6 份专业模板 + 行业报告，让你的培训管理从"拍脑袋"升级为"数据驱动"
             </p>
-            <div className="mt-8 flex items-center justify-center gap-4">
-              <span className="text-4xl font-bold">¥99</span>
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <span className="text-3xl font-bold">¥0</span>
               <span className="text-lg text-blue-200 line-through">¥299</span>
-              <span className="rounded-full bg-amber-400 px-3 py-1 text-sm font-semibold text-amber-900">
-                首发价 3.3 折
+              <span className="rounded-full bg-green-400 px-3 py-1 text-sm font-semibold text-green-900">
+                限时免费
               </span>
             </div>
             <a
               href="#get-toolkit"
               className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-lg font-semibold text-blue-700 shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
             >
-              立即预约 <ArrowRight className="h-5 w-5" />
+              免费领取 <ArrowRight className="h-5 w-5" />
             </a>
           </div>
         </div>
@@ -245,17 +249,12 @@ export default function ToolkitLandingPage() {
             <>
               <Download className="mx-auto h-12 w-12 text-white/80" />
               <h2 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
-                工具包即将上线
+                免费领取工具包
               </h2>
               <p className="mt-3 text-blue-100">
-                留下邮箱，上线后第一时间以首发价 ¥99 获取（原价 ¥299）
+                留下邮箱，立即获取 6 份专业培训管理模板 + 2026 趋势报告
               </p>
-              {waitlistCount > 0 && (
-                <p className="mt-2 text-sm text-blue-200">
-                  已有 {waitlistCount} 人预约
-                </p>
-              )}
-              <form onSubmit={handleSubmit} className="mt-8">
+              <form ref={formRef} onSubmit={handleSubmit} className="mt-8">
                 <div className="flex gap-3 sm:flex-row">
                   <div className="relative flex-1">
                     <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -264,21 +263,22 @@ export default function ToolkitLandingPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="your@company.com"
-                      className="w-full rounded-lg border-0 py-3 pl-10 pr-4 text-gray-900 shadow-sm ring-1 ring-inset ring-white/20 placeholder:text-gray-400 focus:ring-2 focus:ring-amber-400"
+                      className="w-full rounded-lg border-0 py-3 pl-10 pr-4 text-gray-900 shadow-sm ring-1 ring-inset ring-white/20 placeholder:text-gray-400 focus:ring-2 focus:ring-green-400"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="shrink-0 rounded-lg bg-amber-400 px-6 py-3 font-semibold text-amber-900 shadow-sm transition-colors hover:bg-amber-300"
+                    disabled={submitting}
+                    className="shrink-0 rounded-lg bg-green-500 px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-green-400 disabled:opacity-60"
                   >
-                    立即预约
+                    {submitting ? '提交中...' : '免费领取'}
                   </button>
                 </div>
                 {error && (
                   <p className="mt-2 text-sm text-red-200">{error}</p>
                 )}
                 <p className="mt-3 text-xs text-blue-200">
-                  仅用于发送工具包上线通知，不会发送垃圾邮件
+                  仅用于发送工具包资料，不会发送垃圾邮件
                 </p>
               </form>
             </>
@@ -286,24 +286,24 @@ export default function ToolkitLandingPage() {
             <div className="py-8">
               <CheckCircle className="mx-auto h-16 w-16 text-green-300" />
               <h2 className="mt-4 text-2xl font-bold text-white">
-                预约成功！
+                领取成功！
               </h2>
               <p className="mt-3 text-blue-100">
-                工具包上线后我们会第一时间通知你。
-                同时，你可以先看看我们的免费工具：
+                工具包已准备好，你可以直接在线使用全部 6 份模板。
+                同时也可以试试我们的免费计算器：
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
-                  to="/tools/budget-calculator"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+                  to="/toolkit/needs-analysis"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-green-900 transition-colors hover:bg-green-300"
                 >
-                  <Calculator className="h-4 w-4" /> 免费预算计算器
+                  <ClipboardList className="h-4 w-4" /> 立即使用工具包
                 </Link>
                 <Link
                   to="/tools/roi-calculator"
                   className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30"
                 >
-                  <TrendingUp className="h-4 w-4" /> 免费 ROI 计算器
+                  <TrendingUp className="h-4 w-4" /> ROI 计算器
                 </Link>
               </div>
             </div>
@@ -318,20 +318,20 @@ export default function ToolkitLandingPage() {
           <dl className="mt-10 space-y-6">
             {[
               {
-                q: '工具包什么时候上线？',
-                a: '预计 2026 年 3 月底上线。预约用户将第一时间收到通知并享受首发价。',
+                q: '工具包真的免费吗？',
+                a: '是的，完全免费。留下邮箱即可在线使用全部 6 份专业模板和趋势报告，无隐藏费用。',
               },
               {
-                q: '工具包包含哪些格式的文件？',
-                a: '包含 Excel 模板（.xlsx）、Word 文档（.docx）和 PDF 报告。所有模板均可直接编辑使用。',
+                q: '工具包包含哪些内容？',
+                a: '包含培训需求分析模板、年度培训计划模板、培训效果评估工具、预算规划表、招标比价模板和 2026 培训趋势报告，共 6 份专业工具。',
               },
               {
-                q: '购买后能退款吗？',
-                a: '7 天无理由退款。如果工具包不适合你的需求，全额退款。',
+                q: '可以打印使用吗？',
+                a: '可以。所有模板都支持在线使用和打印/导出 PDF，方便在会议中使用或归档。',
               },
               {
                 q: '和网上免费的培训模板有什么区别？',
-                a: '我们的模板基于 500 强企业实践，包含行业基准数据和自动计算公式。不是空模板，而是"填数据就能用"的决策工具。',
+                a: '我们的模板基于 500 强企业实践，包含行业基准数据、评分标准和使用建议。不是空模板，而是"填数据就能用"的决策工具。',
               },
             ].map((faq) => (
               <div key={faq.q} className="border-b border-gray-100 pb-6">
@@ -347,12 +347,12 @@ export default function ToolkitLandingPage() {
       <section className="bg-gray-50 py-12">
         <div className="mx-auto max-w-3xl px-4 text-center lg:px-8">
           <p className="text-gray-500">
-            已经在使用 TrainHub？看看我们的
-            <Link to="/tools/budget-calculator" className="mx-1 text-blue-600 hover:underline">免费预算计算器</Link>
+            已经在使用 TrainHub？试试
+            <Link to="/tools/budget-calculator" className="mx-1 text-blue-600 hover:underline">预算计算器</Link>
             和
             <Link to="/tools/roi-calculator" className="mx-1 text-blue-600 hover:underline">ROI 计算器</Link>
             ，或浏览
-            <Link to="/blog" className="mx-1 text-blue-600 hover:underline">75+ 篇行业洞察文章</Link>。
+            <Link to="/blog" className="mx-1 text-blue-600 hover:underline">90+ 篇行业洞察文章</Link>。
           </p>
         </div>
       </section>
