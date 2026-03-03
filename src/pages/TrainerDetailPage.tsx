@@ -82,6 +82,7 @@ export default function TrainerDetailPage() {
         title={`${trainer.name} - ${trainer.title} | TrainHub`}
         description={`${trainer.name}，${trainer.title}，${trainer.city}，${trainer.years_experience}年培训经验。擅长${trainer.specialties.join('、')}。`}
         path={`/trainers/${trainer.id}`}
+        ogImage={`https://withpace.github.io/trainhub/og/trainers/${trainer.id}.png`}
       />
       {/* 结构化数据 */}
       <JsonLd data={buildPersonSchema(trainer, trainerReviews)} />
