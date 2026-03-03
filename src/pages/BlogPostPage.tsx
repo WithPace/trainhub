@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, ChevronRight, ClipboardCheck } from 'lucide-react'
 import { getBlogPostMetaBySlug, getRelatedBlogPostsByKeywords } from '@/data/blog-meta'
 import RelatedBlogSection from '@/components/ui/RelatedBlogSection'
+import ReadingProgressBar from '@/components/ui/ReadingProgressBar'
 import PageHead from '@/components/seo/PageHead'
 import type { ContentBlock } from '@/data/blog-meta'
 
@@ -190,6 +191,7 @@ export default function BlogPostPage() {
 
   return (
     <div>
+      <ReadingProgressBar />
       <PageHead
         title={`${meta.title} - TrainHub 行业洞察`}
         description={meta.excerpt}

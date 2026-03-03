@@ -568,6 +568,13 @@ export const blogPostsMeta: BlogPostMeta[] = [
   },
 ]
 
+/** 获取最新文章（按发布日期降序） */
+export function getLatestBlogPosts(limit = 3): BlogPostMeta[] {
+  return [...blogPostsMeta]
+    .sort((a, b) => b.publishDate.localeCompare(a.publishDate))
+    .slice(0, limit)
+}
+
 /** 根据 slug 获取文章元数据 */
 export function getBlogPostMetaBySlug(slug: string): BlogPostMeta | undefined {
   return blogPostsMeta.find(post => post.id === slug)
